@@ -64,3 +64,37 @@
         Body: Thank you for registering with our service.
       ```
 ### 1. Kiến trúc tổng quan cho Authenticate
+```ascii
+        ┌─┐                                                                                                                                                                  
+        ║"│                                                                                                                                                                  
+        └┬┘                                                                                                                                                                  
+        ┌┼┐                                                                                                                                                                  
+         │                        ┌──────────┐                   ┌───────────┐                      ┌─────┐          ┌───────────────────┐               ┌──────────────────┐
+        ┌┴┐                       │APIGateway│                   │UserService│                      │Redis│          │NotificationService│               │NotificationServer│
+      Client                      └─────┬────┘                   └─────┬─────┘                      └──┬──┘          └─────────┬─────────┘               └─────────┬────────┘
+         │HTTP Request (Register/Login) │                              │                               │                       │                                   │         
+         │─────────────────────────────>│                              │                               │                       │                                   │         
+         │                              │                              │                               │                       │                                   │         
+         │                              │       Forward Request        │                               │                       │                                   │         
+         │                              │─────────────────────────────>│                               │                       │                                   │         
+         │                              │                              │                               │                       │                                   │         
+         │                              │                              │Publish Event (UserRegistered) │                       │                                   │         
+         │                              │                              │──────────────────────────────>│                       │                                   │         
+         │                              │                              │                               │                       │                                   │         
+         │                              │                              │                               │  Event Notification   │                                   │         
+         │                              │                              │                               │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─>│                                   │         
+         │                              │                              │                               │                       │                                   │         
+         │                              │                              │                               │                       │────┐                              │         
+         │                              │                              │                               │                       │    │ Send Email (Welcome Message) │         
+         │                              │                              │                               │                       │<───┘                              │         
+         │                              │                              │                               │                       │                                   │         
+         │                              │HTTP Response (Success/Token) │                               │                       │                                   │         
+         │                              │<─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│                               │                       │                                   │         
+      Client                      ┌─────┴────┐                   ┌─────┴─────┐                      ┌──┴──┐          ┌─────────┴─────────┐               ┌─────────┴────────┐
+        ┌─┐                       │APIGateway│                   │UserService│                      │Redis│          │NotificationService│               │NotificationServer│
+        ║"│                       └──────────┘                   └───────────┘                      └─────┘          └───────────────────┘               └──────────────────┘
+        └┬┘                                                                                                                                                                  
+        ┌┼┐                                                                                                                                                                  
+         │                                                                                                                                                                   
+        ┌┴┐                                                                                                                                                                  
+```
