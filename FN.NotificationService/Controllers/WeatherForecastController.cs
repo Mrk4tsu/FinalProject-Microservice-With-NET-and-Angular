@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace FN.EmailService.Controllers
+namespace FN.NotificationService.Controllers
 {
     [ApiController]
     [Route("[controller]")]

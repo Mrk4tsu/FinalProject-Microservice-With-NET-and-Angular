@@ -1,0 +1,6 @@
+@FN.NotificationService_HostAddress = http://localhost:5055
+
+GET {{FN.NotificationService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

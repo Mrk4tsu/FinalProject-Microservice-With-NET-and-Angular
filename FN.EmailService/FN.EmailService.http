@@ -1,6 +1,0 @@
-@FN.EmailService_HostAddress = http://localhost:5204
-
-GET {{FN.EmailService_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
