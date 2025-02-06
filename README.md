@@ -2,6 +2,8 @@
 
 ## 📖 Overview  
 This project is designed using a **microservices architecture** to provide a scalable and maintainable system. It is developed as part of the **graduation thesis at Nha Trang University**. 
+
+DEMO: [mrkatsu.io.vn](https://mrkatsu.io.vn)
 ## 🚀 Features 
 - **User Authentication & Authorization** (JWT, Firebase Authentication)
 - **Service-to-Service Communication** (REST API / gRPC)  
