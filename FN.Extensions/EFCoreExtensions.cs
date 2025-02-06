@@ -3,6 +3,8 @@ using FN.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlConnector;
+using System.Data;
 
 namespace FN.Extensions
 {
@@ -16,6 +18,8 @@ namespace FN.Extensions
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
+
+            services.AddSingleton<IDbConnection>(sp => new MySqlConnection(connectionString));
             return services;
         }
     }
