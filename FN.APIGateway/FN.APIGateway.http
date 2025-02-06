@@ -1,0 +1,6 @@
+@FN.APIGateway_HostAddress = http://localhost:5286
+
+GET {{FN.APIGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
