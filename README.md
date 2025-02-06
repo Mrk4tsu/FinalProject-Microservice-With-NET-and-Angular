@@ -1,4 +1,7 @@
 ﻿# Microservices Architecture Project for the Graduation Thesis at Nha Trang University.
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/604e4196-b16c-4b0a-b3f7-e1a029f23e43"/>
+</div>
 
 ## 📖 Overview  
 This project is designed using a **microservices architecture** to provide a scalable and maintainable system. It is developed as part of the **graduation thesis at Nha Trang University**. 
