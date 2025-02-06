@@ -1,4 +1,8 @@
-﻿namespace FN.UserService.Extensions
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace FN.Extensions
 {
     public static class SwaggerExtensions
     {
@@ -6,12 +10,12 @@
         {
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
             return services;
         }
-        public static WebApplication ConfigureSwaggerExplorer(this WebApplication app)
+        public static IApplicationBuilder ConfigureSwaggerExplorer(this IApplicationBuilder app)
         {
-            if (app.Environment.IsDevelopment())
+            var ev = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
+            if (ev.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

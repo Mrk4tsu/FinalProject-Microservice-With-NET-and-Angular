@@ -1,4 +1,4 @@
-namespace FN.NotificationService
+namespace FN.EmailService
 {
     public class WeatherForecast
     {

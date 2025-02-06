@@ -1,9 +1,10 @@
-using FN.UserService.Extensions;
+using FN.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddSwaggerExplorer();
+builder.Services.AddSwaggerExplorer()
+    .InjectDbContext(builder.Configuration);
 
 var app = builder.Build();
 
