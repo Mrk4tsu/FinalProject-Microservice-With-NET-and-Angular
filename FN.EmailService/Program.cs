@@ -1,12 +1,19 @@
+using FN.EmailService;
+using FN.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddHostedService<MailSubscriber>();
+
+builder.Services
+    .InjectRedis(builder.Configuration)
+    .AddSmtpConfig(builder.Configuration);
+
+builder.Services.AddScoped<MailSubscriber>();
 
 builder.Services.AddControllers();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 

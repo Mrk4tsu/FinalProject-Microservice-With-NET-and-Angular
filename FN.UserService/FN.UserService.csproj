@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FN.Application\FN.Application.csproj" />
     <ProjectReference Include="..\FN.Extensions\FN.Extensions.csproj" />
   </ItemGroup>
 

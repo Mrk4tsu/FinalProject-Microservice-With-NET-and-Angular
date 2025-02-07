@@ -30,10 +30,10 @@ namespace FN.Extensions
         {
             services.Configure<IdentityOptions>(options =>
             {
+                options.User.RequireUniqueEmail = false;
                 options.Password.RequireDigit = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
-                options.User.RequireUniqueEmail = true;
             });
             return services;
         }

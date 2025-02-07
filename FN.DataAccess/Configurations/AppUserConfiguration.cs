@@ -14,6 +14,11 @@ namespace FN.DataAccess.Configurations
                 .HasMaxLength(100)
                 .IsRequired()
                 .IsUnicode();
+            builder.Property(x => x.Avatar)
+                .HasMaxLength(255)
+                .HasDefaultValue("https://res.cloudinary.com/dje3seaqj/image/upload/v1736989161/gatapchoi_biglrl.jpg");
+            builder.Property(x => x.TimeCreated)
+                .HasDefaultValue(DateTime.Now);
 
             builder.HasIndex(x => x.UserName)
                 .HasDatabaseName("idx_app_username")

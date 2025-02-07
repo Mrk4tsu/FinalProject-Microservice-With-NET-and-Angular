@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using StackExchange.Redis;
+using FN.Application.System.Redis;
 
 namespace FN.Extensions
 {
@@ -27,6 +28,7 @@ namespace FN.Extensions
                 return multiplexer.GetDatabase();
             });
 
+            services.AddSingleton<IRedisService, RedisService>();
             return services;
         }
     }
