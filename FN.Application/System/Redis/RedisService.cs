@@ -18,11 +18,15 @@ namespace FN.Application.System.Redis
 
         public async Task<string?> GetCache(string key)
         {
-            return await _database.StringGetAsync(key);
+            return await _cache.GetStringAsync(key);
         }
         public async Task SetCache(string key, string value, DistributedCacheEntryOptions options)
         {
             await _cache.SetStringAsync(key, value, options);
+        }
+        public async Task RemoveCache(string key)
+        {
+            await _cache.RemoveAsync(key);
         }
 
         public async Task<T?> GetValue<T>(string key)
@@ -32,21 +36,25 @@ namespace FN.Application.System.Redis
             {
                 return default!;
             }
-            return JsonSerializer.Deserialize<T>(json);
+            return JsonSerializer.Deserialize<T>(json.ToString());
         }
         public async Task SetValue<T>(string key, T value, TimeSpan? expiry = null)
         {
             await _database.StringSetAsync(key, JsonSerializer.Serialize(value), expiry);
         }
+        public async Task RemoveValue(string key)
+        {
+            await _database.KeyDeleteAsync(key);
+        }
 
         public async Task Publish<T>(string channel, T message)
         {
             var serializedMessage = JsonSerializer.Serialize(message);
-            await _subscriber.PublishAsync(channel, serializedMessage);
+            await _subscriber.PublishAsync(new RedisChannel(channel, RedisChannel.PatternMode.Literal), serializedMessage);
         }
         public async Task Subscribe(string channel, Func<RedisChannel, RedisValue, Task> handler)
         {
-            await _subscriber.SubscribeAsync(channel, async (redisChannel, redisValue) =>
+            await _subscriber.SubscribeAsync(new RedisChannel(channel, RedisChannel.PatternMode.Literal), async (redisChannel, redisValue) =>
             {
                 await handler(redisChannel, redisValue);
             });

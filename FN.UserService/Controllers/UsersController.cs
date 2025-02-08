@@ -22,5 +22,13 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDTO login)
+        {
+            var result = await _userService.Authenticate(login);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
     }
 }

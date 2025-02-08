@@ -1,3 +1,4 @@
+using FN.Application.System.Token;
 using FN.Application.System.User;
 using FN.Extensions;
 
@@ -12,6 +13,7 @@ builder.Services.AddSwaggerExplorer()
     .AddIdentityAuth(builder.Configuration);
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 var app = builder.Build();
 
 app.ConfigureSwaggerExplorer()
