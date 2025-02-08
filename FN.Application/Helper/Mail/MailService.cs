@@ -33,7 +33,7 @@ namespace FN.Application.Helper.Mail
                             {"ptimebuy", "no"},
                             {"prodcode", "ABC"},
                             {"pname", "NO"}
-                        } 
+                        }
                     )
             .Property(Send.FromEmail, _smtpSettings.SenderEmail)
             .Property(Send.FromName, _smtpSettings.SenderName)
@@ -101,8 +101,38 @@ namespace FN.Application.Helper.Mail
             }
         }
 
+        public async Task<bool> SendMail(string toEmail, string subject, string body)
+        {
+            MailjetClient client = new MailjetClient(_smtpSettings.ApiKey, _smtpSettings.SecretKey);
+            MailjetRequest request = new MailjetRequest
+            {
+                Resource = Send.Resource,
+            }.Property(Send.FromEmail, _smtpSettings.SenderEmail)
+            .Property(Send.FromName, _smtpSettings.SenderName)
+            .Property(Send.Subject, subject)
+            .Property(Send.TextPart, body)
+            .Property(Send.To, toEmail);
+            MailjetResponse response = await client.PostAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(string.Format("Total: {0}, Count: {1}", response.GetTotal(), response.GetCount()));
+                Console.WriteLine(response.GetData());
+                return true;
+            }
+            else
+            {
+                Console.WriteLine(string.Format("StatusCode: {0}", response.StatusCode));
 
-        //public async Task<bool> Send(string toEmail, string subject, string body)
+                Console.WriteLine(string.Format("ErrorInfo: {0}", response.GetErrorInfo()));
+
+                Console.WriteLine(response.GetData());
+                Console.WriteLine(string.Format("ErrorMessage: {0}", response.GetErrorMessage()));
+                return false;
+            }
+        }
+
+
+        //public async Task<bool> SendMail(string toEmail, string subject, string body)
         //{
         //    var email = new MimeMessage();
         //    email.From.Add(new MailboxAddress(_smtpSettings.SenderName, _smtpSettings.SenderEmail));

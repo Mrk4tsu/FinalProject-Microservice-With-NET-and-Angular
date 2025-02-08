@@ -12,7 +12,9 @@ namespace FN.Utilities
         public const string REDIS_CONNECTION_STRING = "Redis";
         public const string SMTP_SETTINGS = "MailJet";
 
-        public const string MESSAGE_REGISTER_EVENT = "RegisterEvent";
+        public const string MESSAGE_PATTERN_EVENT = "myChannel:*";
+        public const string MESSAGE_REGISTER_EVENT = "myChannel:RegisterEvent";
+        public const string MESSAGE_LOGIN_EVENT = "myChannel:LoginEvent";
 
         public const string TEMPLATE_ORDER_ID = "6705985";
 

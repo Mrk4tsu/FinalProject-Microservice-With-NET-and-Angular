@@ -42,6 +42,10 @@ namespace FN.Application.System.Redis
         {
             await _database.StringSetAsync(key, JsonSerializer.Serialize(value), expiry);
         }
+        public async Task<bool> SetContains(string key, string value)
+        {
+            return await _database.SetContainsAsync(key, value);
+        }
         public async Task RemoveValue(string key)
         {
             await _database.KeyDeleteAsync(key);
@@ -50,11 +54,11 @@ namespace FN.Application.System.Redis
         public async Task Publish<T>(string channel, T message)
         {
             var serializedMessage = JsonSerializer.Serialize(message);
-            await _subscriber.PublishAsync(new RedisChannel(channel, RedisChannel.PatternMode.Literal), serializedMessage);
+            await _subscriber.PublishAsync(new RedisChannel(channel, RedisChannel.PatternMode.Auto), serializedMessage);
         }
         public async Task Subscribe(string channel, Func<RedisChannel, RedisValue, Task> handler)
         {
-            await _subscriber.SubscribeAsync(new RedisChannel(channel, RedisChannel.PatternMode.Literal), async (redisChannel, redisValue) =>
+            await _subscriber.SubscribeAsync(new RedisChannel(channel, RedisChannel.PatternMode.Auto), async (redisChannel, redisValue) =>
             {
                 await handler(redisChannel, redisValue);
             });

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace FN.Application.System.Token
@@ -48,7 +49,6 @@ namespace FN.Application.System.Token
                     );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
             var keyString = _configuration["Tokens:Key"] ?? throw new ArgumentNullException("Tokens:Key", "Token key must be configured.");
@@ -66,28 +66,34 @@ namespace FN.Application.System.Token
                     );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
         public string GenerateRefreshToken() => Guid.NewGuid().ToString();
-
         public async Task<string?> GetRefreshToken(int userId)
         {
             return await _redisService.GetValue<string>($"refresh_token:{userId}");
         }
-
-
         public async Task RemoveRefreshToken(int userId)
         {
             await _redisService.RemoveValue($"refresh_token:{userId}");
         }
-
-        public async Task SaveRefreshToken(string refreshToken, int userId, TimeSpan expiry)
+        public async Task SaveRefreshToken(string refreshToken, int userId, string clientId, TimeSpan expiry)
         {
-            var key = $"refresh_token:{userId}";
+            var key = $"auth:{userId}:refresh_token:{clientId}";
             var options = new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = expiry
             };
             await _redisService.SetValue(key, refreshToken, expiry);
+        }
+        public async Task<bool> IsDeviceRegistered(int userId, string clientId)
+        {
+            var key = $"auth:{userId}:user_devices:{clientId}";
+            return await _redisService.KeyExist(key);
+        }
+        public async Task RegisterDevice(int userId, string clientId)
+        {
+            var key = $"auth:{userId}:user_devices:{clientId}";
+            await _redisService.SetValue(key, clientId);
+            // Có thể set expiration cho key nếu cần
         }
     }
 }

@@ -10,6 +10,7 @@ namespace FN.Application.System.Redis
         // Các phương thức thao tác trực tiếp với Redis thông qua IDatabase
         Task SetValue<T>(string key, T value, TimeSpan? expiry = null);
         Task<T?> GetValue<T>(string key);
+        Task<bool> SetContains(string key, string value);
         Task RemoveValue(string key);
 
         // Các phương thức thao tác với distributed cache qua IDistributedCache

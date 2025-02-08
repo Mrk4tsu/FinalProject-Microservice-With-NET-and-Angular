@@ -16,7 +16,7 @@ namespace FN.Application.System.User
         private readonly ITokenService _tokenService;
         public UserService(IRedisService redisService,
             ITokenService tokenService,
-            UserManager<AppUser> userManager, 
+            UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager)
         {
             _signInManager = signInManager;
@@ -33,18 +33,36 @@ namespace FN.Application.System.User
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, true);
             if (!result.Succeeded) return new ApiErrorResult<TokenResponse>("Tài khoản mật khẩu không chính xác");
 
-            var existingToken = await _tokenService.GetRefreshToken(user.Id);
-            if (!string.IsNullOrEmpty(existingToken)) await _tokenService.RemoveRefreshToken(user.Id);
+            string clientId = request.ClientId;
+            bool isNewDevice = false;
 
+            if (string.IsNullOrEmpty(clientId)) clientId = Guid.NewGuid().ToString();
+            if (!await _tokenService.IsDeviceRegistered(user.Id, clientId))
+            {
+                isNewDevice = true;
+                await _tokenService.RegisterDevice(user.Id, clientId);
+            }
+            var deviceInfo = Commons.ParseUserAgent(request.UserAgent);
+            if (isNewDevice)
+            {
+                var publish = new LoginResponse
+                {
+                    Email = user.Email!,
+                    Username = user.UserName!,
+                    DeviceInfo = deviceInfo
+                };
+                await _redisService.Publish(SystemConstant.MESSAGE_LOGIN_EVENT, publish);
+            }
             var expires = request.RememberMe ? DateTime.Now.AddDays(14) : DateTime.Now.AddDays(3);
             var token = await _tokenService.GenerateAccessToken(user);
             var response = new TokenResponse
             {
                 AccessToken = token,
                 RefreshToken = _tokenService.GenerateRefreshToken(),
-                RefreshTokenExpiry = expires
+                RefreshTokenExpiry = expires,
+                ClientId = clientId
             };
-            await _tokenService.SaveRefreshToken(response.RefreshToken, user.Id, expires - DateTime.Now);
+            await _tokenService.SaveRefreshToken(response.RefreshToken, user.Id, clientId, expires - DateTime.Now);
             return new ApiSuccessResult<TokenResponse>(response);
         }
 

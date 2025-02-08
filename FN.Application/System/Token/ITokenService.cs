@@ -8,8 +8,10 @@ namespace FN.Application.System.Token
         Task<string> GenerateAccessToken(AppUser user);
         string GenerateAccessToken(IEnumerable<Claim> claims);
         string GenerateRefreshToken();
-        Task SaveRefreshToken(string refreshToken, int userId, TimeSpan expiry);
+        Task SaveRefreshToken(string refreshToken, int userId, string clientId, TimeSpan expiry);
         Task RemoveRefreshToken(int userId);
         Task<string?> GetRefreshToken(int userId);
+        Task<bool> IsDeviceRegistered(int userId, string clientId);
+        Task RegisterDevice(int userId, string clientId);
     }
 }
