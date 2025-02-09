@@ -22,6 +22,7 @@ The system consists of multiple independent services, including:
 4. **Order Service** – Manages orders, transactions, and payments.
 5. **Notification Service** – Sends emails, SMS, and in-app notifications.
 6. **Logging Service** – Centralized logging and monitoring system. 
+7. **Extension** - Other services can be added as needed.
 ## 🛠️ Technologies Used 
 - **Backend**: ASP.NET Core 8
 - **Frontend**: Angular 19
