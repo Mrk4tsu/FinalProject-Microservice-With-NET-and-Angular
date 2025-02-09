@@ -82,6 +82,8 @@ StyleCopReport.xml
 *.pgc
 *.pgd
 *.rsp
+# but not Directory.Build.rsp, as it configures directory-level build defaults
+!Directory.Build.rsp
 *.sbr
 *.tlb
 *.tli
@@ -393,6 +395,13 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-
 # JetBrains Rider
 *.sln.iml
+
+# Tệp migration tự động nếu không cần
+Migrations/*.designer.cs
+appsettings.json
+appsettings.*.json
+*/appsettings.json
+FN.EmailService/appsettings.json
+FN.EmailService/appsettings.json
