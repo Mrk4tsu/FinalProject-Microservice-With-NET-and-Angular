@@ -65,5 +65,20 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout(string clientId)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null) return Unauthorized();
+            var request = new TokenRequest
+            {
+                UserId = userId.Value,
+                ClientId = clientId
+            };
+            var result = await _userService.RevokeDevice(request);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
     }
 }
