@@ -9,5 +9,7 @@ namespace FN.Application.System.User
         Task<ApiResult<TokenResponse>> RefreshToken(RefreshTokenRequest request);
         Task<ApiResult<bool>> Register(RegisterDTO request);
         Task<ApiResult<TokenResponse>> Authenticate(LoginDTO request);
+        Task<ApiResult<List<string>>> ListDevice(int userId);
+        Task<ApiResult<bool>> RevokeDevice(TokenRequest request);
     }
 }

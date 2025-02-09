@@ -3,6 +3,7 @@ using FN.Application.System.Redis;
 using FN.Utilities;
 using FN.ViewModel.Helper;
 using FN.ViewModel.Systems.User;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Text.Json;
 
@@ -28,7 +29,7 @@ namespace FN.EmailService
                 switch ((string)channel!)
                 {
                     case SystemConstant.MESSAGE_REGISTER_EVENT:
-                        var user = JsonSerializer.Deserialize<RegisterResponse>(message!);
+                        var user = JsonSerializer.Deserialize<RegisterResponse>(message!);                       
                         var vars = new Dictionary<string, object>()
                         {
                             {"pusername", user?.FullName!}
@@ -38,14 +39,21 @@ namespace FN.EmailService
                         break;
                     case SystemConstant.MESSAGE_LOGIN_EVENT:
                         var userLogin = JsonSerializer.Deserialize<LoginResponse>(message!);
-                        var variable = new Dictionary<string, object>()
+                        var variables = new JObject
                         {
                             {"pbrowser", userLogin!.DeviceInfo.Browser},
                             {"pos", userLogin.DeviceInfo.OS},
                             {"ptime", $"{DateTime.UtcNow:dd/MM/yyyy HH:mm}"},
                             {"puser", userLogin.Username}
                         };
-                        await _mailService.SendMail(userLogin!.Email, $"Cảnh báo bảo mật cho {userLogin.Username}", SystemConstant.TEMPLATE_WARNING_ID, variable);
+                        //var variable = new Dictionary<string, object>()
+                        //{
+                        //    {"pbrowser", userLogin!.DeviceInfo.Browser},
+                        //    {"pos", userLogin.DeviceInfo.OS},
+                        //    {"ptime", $"{DateTime.UtcNow:dd/MM/yyyy HH:mm}"},
+                        //    {"puser", userLogin.Username}
+                        //};
+                        await _mailService.SendMail(userLogin!.Email, $"Cảnh báo bảo mật cho {userLogin.Username}", SystemConstant.TEMPLATE_WARNING_ID, variables);
 
                         break;
                     default:

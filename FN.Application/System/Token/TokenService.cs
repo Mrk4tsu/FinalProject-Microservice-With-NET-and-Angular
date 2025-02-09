@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -55,9 +56,11 @@ namespace FN.Application.System.Token
             var key = $"auth:{request.UserId}:refresh_token:{request.ClientId}";
             return await _redisService.GetValue<string>(key);
         }
-        public async Task RemoveRefreshToken(int userId)
+        public async Task RemoveRefreshToken(TokenRequest request)
         {
-            await _redisService.RemoveValue($"refresh_token:{userId}");
+            var key = $"auth:{request.UserId}:refresh_token:{request.ClientId}";
+            if (await _redisService.KeyExist(key))
+                await _redisService.RemoveValue(key);
         }
         public async Task SaveRefreshToken(string refreshToken, TokenRequest request, TimeSpan expiry)
         {
@@ -72,19 +75,19 @@ namespace FN.Application.System.Token
 
         public async Task<bool> IsDeviceRegistered(TokenRequest request)
         {
-            var key = $"auth:{request.UserId} :user_devices: {request.ClientId}";
-            return await _redisService.KeyExist(key);
+            var key = $"auth:{request.UserId} :user_devices";
+            return await _redisService.SetContains(key, request.ClientId);
         }
         public async Task RegisterDevice(TokenRequest request)
         {
-            var key = $"auth:{request.UserId}:user_devices:{request.ClientId}";
-            await _redisService.SetValue(key, request.ClientId);
+            var key = $"auth:{request.UserId}:user_devices";
+            await _redisService.AddValue(key, request.ClientId);
         }
         public async Task RemoveDevice(TokenRequest request)
         {
-            var key = $"auth:{request.UserId}:user_devices:{request.ClientId}";
-            if (await _redisService.KeyExist(key))
-                await _redisService.RemoveValue(key);
+            var key = $"auth:{request.UserId}:user_devices";
+            if (await _redisService.SetContains(key, request.ClientId))
+                await _redisService.RemoveSetValue(key, request.ClientId);
         }
     }
 }

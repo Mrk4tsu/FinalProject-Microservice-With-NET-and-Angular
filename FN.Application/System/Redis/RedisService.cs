@@ -15,7 +15,11 @@ namespace FN.Application.System.Redis
             _cache = cache;
             _subscriber = connectionMultiplexer.GetSubscriber();
         }
-
+        public async Task<List<string>> ListSetValue(string key)
+        {
+            var member = await _database.SetMembersAsync(key);
+            return member.Select(x => x.ToString()).ToList();
+        }
         public async Task<string?> GetCache(string key)
         {
             return await _cache.GetStringAsync(key);
@@ -29,6 +33,15 @@ namespace FN.Application.System.Redis
             await _cache.RemoveAsync(key);
         }
 
+        public async Task AddValue(string key, string value, TimeSpan? expiry = null)
+        {
+            await _database.SetAddAsync(key, value);
+            if (expiry.HasValue) await _database.KeyExpireAsync(key, expiry);
+        }
+        public async Task RemoveSetValue(string key, string value)
+        {
+            await _database.SetRemoveAsync(key, value);
+        }
         public async Task<T?> GetValue<T>(string key)
         {
             var json = await _database.StringGetAsync(key);

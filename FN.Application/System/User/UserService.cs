@@ -90,7 +90,6 @@ namespace FN.Application.System.User
             await _tokenService.SaveRefreshToken(response.RefreshToken, tokenReq, expires - DateTime.Now);
             return new ApiSuccessResult<TokenResponse>(response);
         }
-
         public async Task<ApiResult<bool>> Register(RegisterDTO request)
         {
             try
@@ -129,6 +128,34 @@ namespace FN.Application.System.User
                 return new ApiErrorResult<bool>("Tạo mới tài khoản không thành công");
             }
             catch (Exception ex)
+            {
+                return new ApiErrorResult<bool>(ex.Message);
+            }
+        }
+        public async Task<ApiResult<List<string>>> ListDevice(int userId)
+        {
+            try
+            {
+                var key = $"auth:{userId}:user_devices";
+                var devices = await _redisService.ListSetValue(key);
+                return new ApiSuccessResult<List<string>>(devices);
+            }
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<List<string>>(ex.Message);
+            }
+        }
+        public async Task<ApiResult<bool>> RevokeDevice(TokenRequest request)
+        {
+            try
+            {
+                //1. Xóa Client khỏi danh sách thiết bị đã đăng ký
+                await _tokenService.RemoveDevice(request);
+                //2. Xóa Refresh Token
+                await _tokenService.RemoveRefreshToken(request);
+                return new ApiSuccessResult<bool>();
+            }
+            catch(Exception ex)
             {
                 return new ApiErrorResult<bool>(ex.Message);
             }

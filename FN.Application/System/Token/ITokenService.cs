@@ -9,7 +9,7 @@ namespace FN.Application.System.Token
         Task<string> GenerateAccessToken(AppUser user);
         string GenerateRefreshToken();
         Task SaveRefreshToken(string refreshToken, TokenRequest request, TimeSpan expiry);
-        Task RemoveRefreshToken(int userId);
+        Task RemoveRefreshToken(TokenRequest request);
         Task<string?> GetRefreshToken(TokenRequest request);
         Task<bool> IsDeviceRegistered(TokenRequest request);
         Task RegisterDevice(TokenRequest request);
