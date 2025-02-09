@@ -402,3 +402,6 @@ FodyWeavers.xsd
 Migrations/*.designer.cs
 appsettings.json
 appsettings.*.json
+*/appsettings.json
+FN.EmailService/appsettings.json
+FN.EmailService/appsettings.json

@@ -1,4 +1,5 @@
 ﻿using FN.DataAccess.Entities;
+using FN.ViewModel.Systems.Token;
 using System.Security.Claims;
 
 namespace FN.Application.System.Token
@@ -6,12 +7,12 @@ namespace FN.Application.System.Token
     public interface ITokenService
     {
         Task<string> GenerateAccessToken(AppUser user);
-        string GenerateAccessToken(IEnumerable<Claim> claims);
         string GenerateRefreshToken();
-        Task SaveRefreshToken(string refreshToken, int userId, string clientId, TimeSpan expiry);
+        Task SaveRefreshToken(string refreshToken, TokenRequest request, TimeSpan expiry);
         Task RemoveRefreshToken(int userId);
-        Task<string?> GetRefreshToken(int userId);
-        Task<bool> IsDeviceRegistered(int userId, string clientId);
-        Task RegisterDevice(int userId, string clientId);
+        Task<string?> GetRefreshToken(TokenRequest request);
+        Task<bool> IsDeviceRegistered(TokenRequest request);
+        Task RegisterDevice(TokenRequest request);
+        Task RemoveDevice(TokenRequest request);
     }
 }

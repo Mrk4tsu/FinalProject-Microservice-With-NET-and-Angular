@@ -1,4 +1,5 @@
 ﻿using FN.Application.System.User;
+using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,14 @@ namespace FN.UserService.Controllers
         public async Task<IActionResult> Login(LoginDTO login)
         {
             var result = await _userService.Authenticate(login);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
+        {
+            var result = await _userService.RefreshToken(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

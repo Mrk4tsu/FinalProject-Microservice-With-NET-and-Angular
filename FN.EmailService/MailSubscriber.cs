@@ -25,29 +25,33 @@ namespace FN.EmailService
             {
                 using var scope = _serviceProvider.CreateScope();
                 var emailService = scope.ServiceProvider.GetRequiredService<IMailService>();
-                switch ((string)channel)
+                switch ((string)channel!)
                 {
                     case SystemConstant.MESSAGE_REGISTER_EVENT:
                         var user = JsonSerializer.Deserialize<RegisterResponse>(message!);
+                        var vars = new Dictionary<string, object>()
+                        {
+                            {"pusername", user?.FullName!}
+                        };
                         if (user!.Status)
-                            await _mailService.SendMail(user!.Email, $"Welcome! {user.FullName}", "Thank you for registering.", SystemConstant.TEMPLATE_ORDER_ID);
+                            await _mailService.SendMail(user!.Email, $"Chào mừng {user.FullName} đến MrKatsu Shop!", SystemConstant.TEMPLATE_WELCOME_ID, vars);
                         break;
                     case SystemConstant.MESSAGE_LOGIN_EVENT:
                         var userLogin = JsonSerializer.Deserialize<LoginResponse>(message!);
-                        var emailContent = $@"
-                            <h3>⚠️ Cảnh báo đăng nhập mới ⚠️</h3>
-                            <p>Thời gian: {DateTime.UtcNow:dd/MM/yyyy HH:mm}</p>
-                            <p>Thiết bị: {userLogin.DeviceInfo.DeviceType}</p>
-                            <p>Hệ điều hành: {userLogin.DeviceInfo.OS}</p>
-                            <p>Trình duyệt: {userLogin.DeviceInfo.Browser}</p>
-                        ";
-                        await _mailService.SendMail(userLogin!.Email, $"Welcome! {userLogin.Username}", emailContent);
+                        var variable = new Dictionary<string, object>()
+                        {
+                            {"pbrowser", userLogin!.DeviceInfo.Browser},
+                            {"pos", userLogin.DeviceInfo.OS},
+                            {"ptime", $"{DateTime.UtcNow:dd/MM/yyyy HH:mm}"},
+                            {"puser", userLogin.Username}
+                        };
+                        await _mailService.SendMail(userLogin!.Email, $"Cảnh báo bảo mật cho {userLogin.Username}", SystemConstant.TEMPLATE_WARNING_ID, variable);
 
                         break;
                     default:
                         break;
                 }
-                
+
             });
             while (!stoppingToken.IsCancellationRequested)
             {

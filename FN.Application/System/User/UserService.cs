@@ -3,6 +3,7 @@ using FN.Application.System.Token;
 using FN.DataAccess.Entities;
 using FN.Utilities;
 using FN.ViewModel.Helper;
+using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,7 +25,27 @@ namespace FN.Application.System.User
             _userManager = userManager;
             _tokenService = tokenService;
         }
+        public async Task<ApiResult<TokenResponse>> RefreshToken(RefreshTokenRequest request)
+        {
+            var currentToken = await _tokenService.GetRefreshToken(request);
+            if (currentToken == null || currentToken != request.RefreshToken)
+                return new ApiErrorResult<TokenResponse>("Refresh token không hợp lệ");
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+            if (user == null) return new ApiErrorResult<TokenResponse>("Tài khoản không tồn tại");
 
+            var token = await _tokenService.GenerateAccessToken(user);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            var response = new TokenResponse
+            {
+                AccessToken = token,
+                RefreshToken = newRefreshToken,
+                RefreshTokenExpiry = DateTime.Now.AddDays(3),
+                ClientId = request.ClientId
+            };
+            await _tokenService.SaveRefreshToken(newRefreshToken, request, response.RefreshTokenExpiry - DateTime.Now);
+            return new ApiSuccessResult<TokenResponse>(response);
+        }
         public async Task<ApiResult<TokenResponse>> Authenticate(LoginDTO request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
@@ -35,12 +56,16 @@ namespace FN.Application.System.User
 
             string clientId = request.ClientId;
             bool isNewDevice = false;
-
+            var tokenReq = new TokenRequest
+            {
+                UserId = user.Id,
+                ClientId = clientId
+            };
             if (string.IsNullOrEmpty(clientId)) clientId = Guid.NewGuid().ToString();
-            if (!await _tokenService.IsDeviceRegistered(user.Id, clientId))
+            if (!await _tokenService.IsDeviceRegistered(tokenReq))
             {
                 isNewDevice = true;
-                await _tokenService.RegisterDevice(user.Id, clientId);
+                await _tokenService.RegisterDevice(tokenReq);
             }
             var deviceInfo = Commons.ParseUserAgent(request.UserAgent);
             if (isNewDevice)
@@ -62,7 +87,7 @@ namespace FN.Application.System.User
                 RefreshTokenExpiry = expires,
                 ClientId = clientId
             };
-            await _tokenService.SaveRefreshToken(response.RefreshToken, user.Id, clientId, expires - DateTime.Now);
+            await _tokenService.SaveRefreshToken(response.RefreshToken, tokenReq, expires - DateTime.Now);
             return new ApiSuccessResult<TokenResponse>(response);
         }
 

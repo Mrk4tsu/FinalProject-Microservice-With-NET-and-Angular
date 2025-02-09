@@ -1,12 +1,12 @@
 ﻿using FN.Application.System.Redis;
 using FN.DataAccess.Entities;
+using FN.ViewModel.Systems.Token;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace FN.Application.System.Token
@@ -49,51 +49,42 @@ namespace FN.Application.System.Token
                     );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        public string GenerateAccessToken(IEnumerable<Claim> claims)
-        {
-            var keyString = _configuration["Tokens:Key"] ?? throw new ArgumentNullException("Tokens:Key", "Token key must be configured.");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var expiryMinutesString = _configuration["Tokens:AccessTokenExpiryMinutes"];
-            if (!double.TryParse(expiryMinutesString, out double expiryMinutes)) expiryMinutes = 30;
-            var token = new JwtSecurityToken(
-                        issuer: _configuration["Tokens:Issuer"],
-                        audience: _configuration["Tokens:Audience"],
-                        claims: claims,
-                        expires: DateTime.Now.AddMinutes(expiryMinutes),
-                        signingCredentials: creds
-                    );
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
         public string GenerateRefreshToken() => Guid.NewGuid().ToString();
-        public async Task<string?> GetRefreshToken(int userId)
+        public async Task<string?> GetRefreshToken(TokenRequest request)
         {
-            return await _redisService.GetValue<string>($"refresh_token:{userId}");
+            var key = $"auth:{request.UserId}:refresh_token:{request.ClientId}";
+            return await _redisService.GetValue<string>(key);
         }
         public async Task RemoveRefreshToken(int userId)
         {
             await _redisService.RemoveValue($"refresh_token:{userId}");
         }
-        public async Task SaveRefreshToken(string refreshToken, int userId, string clientId, TimeSpan expiry)
+        public async Task SaveRefreshToken(string refreshToken, TokenRequest request, TimeSpan expiry)
         {
-            var key = $"auth:{userId}:refresh_token:{clientId}";
+            var key = $"auth:{request.UserId}:refresh_token:{request.ClientId}";
             var options = new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = expiry
             };
             await _redisService.SetValue(key, refreshToken, expiry);
         }
-        public async Task<bool> IsDeviceRegistered(int userId, string clientId)
+
+
+        public async Task<bool> IsDeviceRegistered(TokenRequest request)
         {
-            var key = $"auth:{userId}:user_devices:{clientId}";
+            var key = $"auth:{request.UserId} :user_devices: {request.ClientId}";
             return await _redisService.KeyExist(key);
         }
-        public async Task RegisterDevice(int userId, string clientId)
+        public async Task RegisterDevice(TokenRequest request)
         {
-            var key = $"auth:{userId}:user_devices:{clientId}";
-            await _redisService.SetValue(key, clientId);
-            // Có thể set expiration cho key nếu cần
+            var key = $"auth:{request.UserId}:user_devices:{request.ClientId}";
+            await _redisService.SetValue(key, request.ClientId);
+        }
+        public async Task RemoveDevice(TokenRequest request)
+        {
+            var key = $"auth:{request.UserId}:user_devices:{request.ClientId}";
+            if (await _redisService.KeyExist(key))
+                await _redisService.RemoveValue(key);
         }
     }
 }
