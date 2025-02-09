@@ -1,13 +1,13 @@
 {
-  "name": "final-project",
+  "name": "client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --no-hmr",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:final-project": "node dist/final-project/server/server.mjs"
+    "serve:ssr:Client": "node dist/client/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -22,6 +22,7 @@
     "@angular/router": "^19.1.0",
     "@angular/ssr": "^19.1.5",
     "express": "^4.18.2",
+    "ngx-cookie-service": "^19.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
