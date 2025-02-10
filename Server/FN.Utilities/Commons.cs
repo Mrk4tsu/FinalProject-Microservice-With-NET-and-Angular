@@ -1,4 +1,4 @@
-﻿using FN.ViewModel.Helper;
+﻿using FN.ViewModel.Helper.Device;
 using UAParser;
 
 namespace FN.Utilities

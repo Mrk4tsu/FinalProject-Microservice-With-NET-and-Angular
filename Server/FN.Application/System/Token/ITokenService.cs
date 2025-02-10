@@ -1,4 +1,6 @@
 ﻿using FN.DataAccess.Entities;
+using FN.ViewModel.Helper.API;
+using FN.ViewModel.Helper.Device;
 using FN.ViewModel.Systems.Token;
 using System.Security.Claims;
 
@@ -11,8 +13,5 @@ namespace FN.Application.System.Token
         Task SaveRefreshToken(string refreshToken, TokenRequest request, TimeSpan expiry);
         Task RemoveRefreshToken(TokenRequest request);
         Task<string?> GetRefreshToken(TokenRequest request);
-        Task<bool> IsDeviceRegistered(TokenRequest request);
-        Task RegisterDevice(TokenRequest request);
-        Task RemoveDevice(TokenRequest request);
     }
 }

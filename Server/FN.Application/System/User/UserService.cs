@@ -3,9 +3,13 @@ using FN.Application.System.Token;
 using FN.DataAccess.Entities;
 using FN.Utilities;
 using FN.ViewModel.Helper;
+using FN.ViewModel.Helper.API;
+using FN.ViewModel.Helper.Device;
 using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Driver;
 
 namespace FN.Application.System.User
 {
@@ -15,15 +19,18 @@ namespace FN.Application.System.User
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenService _tokenService;
+        private readonly IMongoCollection<UserDevice> _userDevicesCollection;
         public UserService(IRedisService redisService,
-            ITokenService tokenService,
-            UserManager<AppUser> userManager,
+                        IMongoDatabase database,
+                        ITokenService tokenService,
+                        UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager)
         {
             _signInManager = signInManager;
             _redisService = redisService;
             _userManager = userManager;
             _tokenService = tokenService;
+            _userDevicesCollection = database.GetCollection<UserDevice>("UserDevices");
         }
         public async Task<ApiResult<TokenResponse>> RefreshToken(RefreshTokenRequest request)
         {
@@ -55,26 +62,35 @@ namespace FN.Application.System.User
             if (!result.Succeeded) return new ApiErrorResult<TokenResponse>("Tài khoản mật khẩu không chính xác");
 
             string clientId = request.ClientId;
-            bool isNewDevice = false;            
+            bool isNewDevice = false;
             if (string.IsNullOrEmpty(clientId)) clientId = Guid.NewGuid().ToString();
             var tokenReq = new TokenRequest
             {
                 UserId = user.Id,
                 ClientId = clientId
             };
-            if (!await _tokenService.IsDeviceRegistered(tokenReq))
+            if (!await IsDeviceRegistered(tokenReq))
             {
                 isNewDevice = true;
-                await _tokenService.RegisterDevice(tokenReq);
+                await SaveDeviceInfo(tokenReq, request.UserAgent, "127.0.0.1");
             }
             var deviceInfo = Commons.ParseUserAgent(request.UserAgent);
+            var device = new DeviceInfoDetail
+            {
+                ClientId = clientId,
+                Browser = deviceInfo.Browser,
+                DeviceType = deviceInfo.DeviceType,
+                IPAddress = "127.0.0.1",
+                LastLogin = DateTime.Now,
+                OS = deviceInfo.OS
+            };
             if (isNewDevice)
             {
                 var publish = new LoginResponse
                 {
                     Email = user.Email!,
                     Username = user.UserName!,
-                    DeviceInfo = deviceInfo
+                    DeviceInfo = device
                 };
                 await _redisService.Publish(SystemConstant.MESSAGE_LOGIN_EVENT, publish);
             }
@@ -132,33 +148,56 @@ namespace FN.Application.System.User
                 return new ApiErrorResult<bool>(ex.Message);
             }
         }
-        public async Task<ApiResult<List<string>>> ListDevice(int userId)
-        {
-            try
-            {
-                var key = $"auth:{userId}:user_devices";
-                var devices = await _redisService.ListSetValue(key);
-                return new ApiSuccessResult<List<string>>(devices);
-            }
-            catch (Exception ex)
-            {
-                return new ApiErrorResult<List<string>>(ex.Message);
-            }
-        }
         public async Task<ApiResult<bool>> RevokeDevice(TokenRequest request)
         {
             try
             {
                 //1. Xóa Client khỏi danh sách thiết bị đã đăng ký
-                await _tokenService.RemoveDevice(request);
+                var filter = Builders<UserDevice>.Filter.Eq(u => u.UserId, request.UserId);
+                var update = Builders<UserDevice>.Update.PullFilter(u => u.Devices, d => d.ClientId == request.ClientId);
+
+                await _userDevicesCollection.UpdateOneAsync(filter, update);
                 //2. Xóa Refresh Token
                 await _tokenService.RemoveRefreshToken(request);
                 return new ApiSuccessResult<bool>();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ApiErrorResult<bool>(ex.Message);
             }
+        }
+        public async Task SaveDeviceInfo(TokenRequest request, string userAgent, string ipAddress)
+        {
+            var device = Commons.ParseUserAgent(userAgent);
+            var deviceInfo = new DeviceInfoDetail
+            {
+                ClientId = request.ClientId,
+                Browser = device.Browser,
+                DeviceType = device.DeviceType,
+                IPAddress = ipAddress,
+                LastLogin = DateTime.Now,
+                OS = device.OS,
+            };
+            var filter = Builders<UserDevice>.Filter.Eq(u => u.UserId, request.UserId);
+            var update = Builders<UserDevice>.Update.Push(u => u.Devices, deviceInfo);
+            await _userDevicesCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
+        }
+        public async Task<ApiResult<List<DeviceInfoDetail>>> GetRegisteredDevices(int userId)
+        {
+            var userDevice = await _userDevicesCollection.Find(u => u.UserId == userId).FirstOrDefaultAsync();
+            if (userDevice == null)
+            {
+                return new ApiErrorResult<List<DeviceInfoDetail>>("Không có CLJ hết");
+            }
+            return new ApiSuccessResult<List<DeviceInfoDetail>>(userDevice.Devices);
+        }
+        public async Task<bool> IsDeviceRegistered(TokenRequest request)
+        {
+            var filter = Builders<UserDevice>.Filter.And(
+            Builders<UserDevice>.Filter.Eq(u => u.UserId, request.UserId),
+            Builders<UserDevice>.Filter.ElemMatch(u => u.Devices,
+                Builders<DeviceInfoDetail>.Filter.Eq(d => d.ClientId, request.ClientId)));
+            return await _userDevicesCollection.Find(filter).AnyAsync();
         }
     }
 }

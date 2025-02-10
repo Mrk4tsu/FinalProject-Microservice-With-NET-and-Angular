@@ -36,7 +36,7 @@ namespace FN.UserService.Controllers
         {
             var userId = GetUserIdFromClaims();
             if (userId == null) return Unauthorized();
-            var result = await _userService.ListDevice(userId.Value);
+            var result = await _userService.GetRegisteredDevices(userId.Value);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

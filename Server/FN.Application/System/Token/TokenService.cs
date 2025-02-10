@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,7 +16,9 @@ namespace FN.Application.System.Token
         private readonly UserManager<AppUser> _userManager;
         private readonly IRedisService _redisService;
         private readonly IConfiguration _configuration;
-        public TokenService(IConfiguration configuration, UserManager<AppUser> userManager, IRedisService redisService)
+        public TokenService(IConfiguration configuration,
+            UserManager<AppUser> userManager,
+            IRedisService redisService)
         {
             _configuration = configuration;
             _userManager = userManager;
@@ -70,24 +71,6 @@ namespace FN.Application.System.Token
                 AbsoluteExpirationRelativeToNow = expiry
             };
             await _redisService.SetValue(key, refreshToken, expiry);
-        }
-
-
-        public async Task<bool> IsDeviceRegistered(TokenRequest request)
-        {
-            var key = $"auth:{request.UserId} :user_devices";
-            return await _redisService.SetContains(key, request.ClientId);
-        }
-        public async Task RegisterDevice(TokenRequest request)
-        {
-            var key = $"auth:{request.UserId}:user_devices";
-            await _redisService.AddValue(key, request.ClientId);
-        }
-        public async Task RemoveDevice(TokenRequest request)
-        {
-            var key = $"auth:{request.UserId}:user_devices";
-            if (await _redisService.SetContains(key, request.ClientId))
-                await _redisService.RemoveSetValue(key, request.ClientId);
-        }
+        }     
     }
 }

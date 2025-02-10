@@ -1,4 +1,4 @@
-﻿namespace FN.ViewModel.Helper
+﻿namespace FN.ViewModel.Helper.API
 {
     public class ApiErrorResult<T> : ApiResult<T>
     {

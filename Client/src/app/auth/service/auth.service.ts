@@ -20,7 +20,7 @@ export class AuthService {
   private refreshTokenSubject = new BehaviorSubject<any>(null);
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
-  devices: any = [];
+  devices: UserDevice[] = [];
   url = environment.baseUrl + 'user';
 
   register(formData: any) {
@@ -191,4 +191,13 @@ export class User {
   fullName: string = '';
   avatar: string = '';
   role: string = '';
+}
+
+export class UserDevice {
+  clientId: string = "2bdacae9-c331-40fb-893f-40f116213ed1"
+  lastLogin: string = "2025-02-10T15:06:40.807Z"
+  ipAddress: string = "127.0.0.1"
+  browser: string = "Chrome Mobile 132"
+  os: string = "Android 6"
+  deviceType: string = "Nexus 5"
 }

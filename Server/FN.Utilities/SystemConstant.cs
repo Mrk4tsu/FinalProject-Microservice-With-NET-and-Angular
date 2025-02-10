@@ -4,6 +4,7 @@
     {
         public const string DB_CONNECTION_STRING = "MySQL";
         public const string REDIS_CONNECTION_STRING = "Redis";
+        public const string MONGODB_SETTING = "MongoDBSettings";
         public const string SMTP_SETTINGS = "MailJet";
 
         public const string MESSAGE_PATTERN_EVENT = "myChannel:*";

@@ -48,8 +48,7 @@ export class HomeComponent {
   }
 
   onDeleteDevice(clientId: string) {
-    this.currentDeviceId = this.authService.getClientId();
-    if (this.isCurrentDevice(this.currentDeviceId)) {
+    if (this.isCurrentDevice(clientId)) {
       this.showConfirmLogoutModal();
     } else {
       this.deleteDevice(clientId);
@@ -59,7 +58,7 @@ export class HomeComponent {
   deleteDevice(clientId: string) {
     this.authService.revokeDevice(clientId).subscribe({
       next: (res: any) => {
-        this.authService.devices = this.authService.devices.filter((device: any) => device !== clientId);
+        this.authService.devices = this.authService.devices.filter((device: any) => device.clientId !== clientId);
       },
       error: (err) => {
         console.error(err);
@@ -87,6 +86,9 @@ export class HomeComponent {
   }
 
   isCurrentDevice(clientId: string): boolean {
-    return clientId === this.authService.getClientId();
+    if (clientId === this.authService.getClientId())
+      return true;
+    else
+      return false;
   }
 }

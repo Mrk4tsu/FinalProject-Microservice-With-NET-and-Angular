@@ -1,4 +1,4 @@
-﻿using FN.ViewModel.Helper;
+﻿using FN.ViewModel.Helper.Device;
 
 namespace FN.ViewModel.Systems.User
 {
@@ -28,6 +28,6 @@ namespace FN.ViewModel.Systems.User
     {
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public DeviceInfo DeviceInfo { get; set; } = new DeviceInfo();
+        public DeviceInfoDetail DeviceInfo { get; set; } = new DeviceInfoDetail();
     }
 }

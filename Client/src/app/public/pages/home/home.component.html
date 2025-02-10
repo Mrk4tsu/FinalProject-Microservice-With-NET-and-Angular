@@ -12,12 +12,13 @@
       } @else {
         <li *ngFor="let item of authService.devices"
             class="list-group-item d-flex justify-content-between align-items-center">
-          @if (isCurrentDevice(item)) {
-            <span class="fw-bold text-success">{{ item }}</span>
+          @if (isCurrentDevice(item.clientId)) {
+            <span class="fw-bold text-success">{{ item.deviceType }}</span>
           } @else {
-            <span>{{ item }}</span>
+            <span>{{ item.deviceType }}</span>
           }
-          <button (click)="onDeleteDevice(item)" class="badge bg-primary rounded-pill border-0">Đăng xuất thiết bị
+          <button (click)="onDeleteDevice(item.clientId)" class="badge bg-primary rounded-pill border-0">Đăng xuất thiết
+            bị
           </button>
         </li>
       }

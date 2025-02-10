@@ -43,16 +43,10 @@ namespace FN.EmailService
                         {
                             {"pbrowser", userLogin!.DeviceInfo.Browser},
                             {"pos", userLogin.DeviceInfo.OS},
-                            {"ptime", $"{DateTime.UtcNow:dd/MM/yyyy HH:mm}"},
-                            {"puser", userLogin.Username}
+                            {"ptime", userLogin.DeviceInfo.LastLogin.ToString("hh:mm dd/MM/yyyy")},
+                            {"puser", userLogin.Username},
+                            {"pip", userLogin.DeviceInfo.IPAddress}
                         };
-                        //var variable = new Dictionary<string, object>()
-                        //{
-                        //    {"pbrowser", userLogin!.DeviceInfo.Browser},
-                        //    {"pos", userLogin.DeviceInfo.OS},
-                        //    {"ptime", $"{DateTime.UtcNow:dd/MM/yyyy HH:mm}"},
-                        //    {"puser", userLogin.Username}
-                        //};
                         await _mailService.SendMail(userLogin!.Email, $"Cảnh báo bảo mật cho {userLogin.Username}", SystemConstant.TEMPLATE_WARNING_ID, variables);
 
                         break;
