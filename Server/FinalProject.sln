@@ -26,8 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1.SolutionItem", "1.Solutio
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.Client", "5.Client", "{195643AE-E249-44F9-9144-F094043383D8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Uml", "Uml", "{6AA0B328-4096-4C29-9FAA-B82C4B871B3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FN.EmailService", "FN.EmailService\FN.EmailService.csproj", "{19DBAFEA-2F19-46C9-A10C-81539EF7287E}"

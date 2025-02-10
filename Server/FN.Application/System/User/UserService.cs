@@ -55,13 +55,13 @@ namespace FN.Application.System.User
             if (!result.Succeeded) return new ApiErrorResult<TokenResponse>("Tài khoản mật khẩu không chính xác");
 
             string clientId = request.ClientId;
-            bool isNewDevice = false;
+            bool isNewDevice = false;            
+            if (string.IsNullOrEmpty(clientId)) clientId = Guid.NewGuid().ToString();
             var tokenReq = new TokenRequest
             {
                 UserId = user.Id,
                 ClientId = clientId
             };
-            if (string.IsNullOrEmpty(clientId)) clientId = Guid.NewGuid().ToString();
             if (!await _tokenService.IsDeviceRegistered(tokenReq))
             {
                 isNewDevice = true;

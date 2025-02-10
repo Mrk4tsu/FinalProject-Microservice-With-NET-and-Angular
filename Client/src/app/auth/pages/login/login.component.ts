@@ -20,6 +20,7 @@ export class LoginComponent {
               private service: AuthService,
               private router: Router,
               public formBuilder: FormBuilder) {
+    this.service.deleteToken();
   }
 
   form = this.formBuilder.group({

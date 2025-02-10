@@ -31,7 +31,7 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpGet("list-device")]
+        [HttpGet("devices")]
         public async Task<IActionResult> ListDevice()
         {
             var userId = GetUserIdFromClaims();
@@ -65,16 +65,9 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout(string clientId)
+        [HttpPost("logout"), AllowAnonymous]
+        public async Task<IActionResult> Logout(TokenRequest request)
         {
-            var userId = GetUserIdFromClaims();
-            if (userId == null) return Unauthorized();
-            var request = new TokenRequest
-            {
-                UserId = userId.Value,
-                ClientId = clientId
-            };
             var result = await _userService.RevokeDevice(request);
             if (result.Success)
                 return Ok(result);
