@@ -1,4 +1,4 @@
-﻿using FN.Application.System.Redis;
+﻿using FN.Application.Systems.Redis;
 using FN.DataAccess.Entities;
 using FN.ViewModel.Systems.Token;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace FN.Application.System.Token
+namespace FN.Application.Systems.Token
 {
     public class TokenService : ITokenService
     {

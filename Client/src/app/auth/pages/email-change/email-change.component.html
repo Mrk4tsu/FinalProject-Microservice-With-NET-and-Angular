@@ -1,0 +1,5 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <input formControlName="newEmail" type="email" placeholder="Email mới">
+  <button type="submit" [disabled]="form.invalid">Gửi yêu cầu</button>
+</form>
+<div *ngIf="message">{{ message }}</div>

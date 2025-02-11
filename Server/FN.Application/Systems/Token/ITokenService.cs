@@ -4,7 +4,7 @@ using FN.ViewModel.Helper.Device;
 using FN.ViewModel.Systems.Token;
 using System.Security.Claims;
 
-namespace FN.Application.System.Token
+namespace FN.Application.Systems.Token
 {
     public interface ITokenService
     {

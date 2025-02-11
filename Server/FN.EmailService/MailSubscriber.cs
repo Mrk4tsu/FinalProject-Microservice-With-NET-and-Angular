@@ -1,10 +1,11 @@
 ﻿using FN.Application.Helper.Mail;
-using FN.Application.System.Redis;
+using FN.Application.Systems.Redis;
 using FN.Utilities;
 using FN.ViewModel.Helper;
 using FN.ViewModel.Systems.User;
 using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Net;
 using System.Text.Json;
 
 namespace FN.EmailService
@@ -14,11 +15,13 @@ namespace FN.EmailService
         private readonly IMailService _mailService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IRedisService _redisService;
-        public MailSubscriber(IMailService mailService, IServiceProvider serviceProvider, IRedisService redisService)
+        private readonly IConfiguration _configuration;
+        public MailSubscriber(IMailService mailService, IServiceProvider serviceProvider, IRedisService redisService, IConfiguration configuration)
         {
             _mailService = mailService;
             _serviceProvider = serviceProvider;
             _redisService = redisService;
+            _configuration = configuration;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -29,7 +32,7 @@ namespace FN.EmailService
                 switch ((string)channel!)
                 {
                     case SystemConstant.MESSAGE_REGISTER_EVENT:
-                        var user = JsonSerializer.Deserialize<RegisterResponse>(message!);                       
+                        var user = JsonSerializer.Deserialize<RegisterResponse>(message!);
                         var vars = new Dictionary<string, object>()
                         {
                             {"pusername", user?.FullName!}
@@ -48,7 +51,16 @@ namespace FN.EmailService
                             {"pip", userLogin.DeviceInfo.IPAddress}
                         };
                         await _mailService.SendMail(userLogin!.Email, $"Cảnh báo bảo mật cho {userLogin.Username}", SystemConstant.TEMPLATE_WARNING_ID, variables);
-
+                        break;
+                    case SystemConstant.MESSAGE_UPDATE_EMAIL_EVENT:
+                        var req = JsonSerializer.Deserialize<UpdateEmailResponse>(message!);
+                        var baseDomain = _configuration["BaseDomain"];
+                        var link = UrlCallback(req.UserId, req.NewEmail, req.Token, baseDomain ?? "https://mrkatsu.io.vn");
+                        var obj = new JObject
+                        {
+                            {"plink", link}
+                        };
+                        await _mailService.SendMail(req!.NewEmail, $"Xác nhận thay đổi email", SystemConstant.TEMPLATE_UPDATE_MAIL_ID, obj);
                         break;
                     default:
                         break;
@@ -59,6 +71,11 @@ namespace FN.EmailService
             {
                 await Task.Delay(1000, stoppingToken);
             }
+        }
+        private string UrlCallback(int userId, string newEmail, string token, string domain)
+        {
+            var encodedToken = WebUtility.UrlEncode(token);
+            return $"{domain}/confirm-email?userId={userId}&newEmail={newEmail}&token={encodedToken}";
         }
     }
 }

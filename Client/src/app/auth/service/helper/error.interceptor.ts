@@ -27,7 +27,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
           break;
       }
       toastr.error(errorMessage, 'Error');
-      return throwError(() => new Error(""));
+      return throwError(() => new Error(errorMessage));
     })
   );
 };

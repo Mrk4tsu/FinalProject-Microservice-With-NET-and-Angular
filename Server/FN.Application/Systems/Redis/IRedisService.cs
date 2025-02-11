@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using StackExchange.Redis;
 
-namespace FN.Application.System.Redis
+namespace FN.Application.Systems.Redis
 {
     public interface IRedisService
     {

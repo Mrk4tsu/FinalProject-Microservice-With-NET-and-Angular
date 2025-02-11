@@ -2,7 +2,7 @@
 using StackExchange.Redis;
 using System.Text.Json;
 
-namespace FN.Application.System.Redis
+namespace FN.Application.Systems.Redis
 {
     public class RedisService : IRedisService
     {

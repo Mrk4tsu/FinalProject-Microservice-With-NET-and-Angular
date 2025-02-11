@@ -1,4 +1,5 @@
-﻿using FN.DataAccess;
+﻿using FN.Application.MapProfile;
+using FN.DataAccess;
 using FN.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,7 @@ namespace FN.Extensions
             });
 
             services.AddSingleton<IDbConnection>(sp => new MySqlConnection(connectionString));
+            services.AddAutoMapper(typeof(AutoMapperProfile));
             return services;
         }
     }

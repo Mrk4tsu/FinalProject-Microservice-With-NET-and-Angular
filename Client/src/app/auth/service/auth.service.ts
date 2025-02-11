@@ -21,10 +21,20 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
   devices: UserDevice[] = [];
-  url = environment.baseUrl + 'user';
+  urlAuth = environment.baseUrl + 'auth';
+  urlUser = environment.baseUrl + 'user';
+
+  requestEmailChange(newEmail: string) {
+    return this.http.post(this.urlUser + '/request?newEmail=' + newEmail, {});
+  }
+
+  confirmEmailChange(userId: string, newEmail: string, token: string) {
+    const encodedToken = encodeURIComponent(token);
+    return this.http.post(this.urlUser + '/confirm', {userId, newEmail, token: encodedToken});
+  }
 
   register(formData: any) {
-    return this.http.post(this.url + '/register', formData);
+    return this.http.post(this.urlAuth + '/register', formData);
   }
 
   login(formData: any) {
@@ -32,7 +42,7 @@ export class AuthService {
       ? navigator.userAgent
       : 'Server';
     const clientId = this.getClientId();
-    return this.http.post(this.url + '/login', {...formData, clientId, userAgent}).pipe(
+    return this.http.post(this.urlAuth + '/login', {...formData, clientId, userAgent}).pipe(
       tap((res: any) => {
         const {accessToken, refreshToken, clientId, refreshTokenExpiry} = res.data;
         this.saveToken(accessToken, refreshToken, clientId, refreshTokenExpiry);
@@ -53,7 +63,7 @@ export class AuthService {
         return throwError(() => new Error('Missing credentials'));
       }
       const userId = this.decodeTokenToUser(this.getAccessToken())?.userId;
-      return this.http.post<any>(this.url + '/refresh-token', {
+      return this.http.post<any>(this.urlAuth + '/refresh-token', {
         refreshToken,
         clientId,
         userId
@@ -107,19 +117,25 @@ export class AuthService {
   logOut() {
     const userId = this.getCurrentUser()?.userId;
     const clientId = this.getClientId();
-    this.http.post(this.url + '/logout', {userId, clientId}).subscribe(() => {
-      this.deleteToken();
-      this.cookieService.delete(CLIENT_ID_KEY, '/');
-      this.updateUser(new User());
+    this.http.post(this.urlAuth + '/logout', {userId, clientId}).subscribe({
+      next: () => {
+        this.deleteToken();
+        this.cookieService.delete(CLIENT_ID_KEY, '/');
+        this.updateUser(new User());
+      },
+      error: (err) => {
+        this.deleteToken();
+        this.cookieService.delete(CLIENT_ID_KEY, '/');
+      }
     });
   }
 
   getDevices() {
-    return this.http.get(this.url + '/devices');
+    return this.http.get(this.urlAuth + '/devices');
   }
 
   revokeDevice(clientId: string) {
-    return this.http.post(this.url + `/revoke-device?clientId=${clientId}`, {});
+    return this.http.post(this.urlAuth + `/revoke-device?clientId=${clientId}`, {});
   }
 
   saveToken(accessToken: string, refreshToken: string, clientId: string, refreshTokenExpiry: string) {
@@ -194,10 +210,10 @@ export class User {
 }
 
 export class UserDevice {
-  clientId: string = "2bdacae9-c331-40fb-893f-40f116213ed1"
-  lastLogin: string = "2025-02-10T15:06:40.807Z"
-  ipAddress: string = "127.0.0.1"
-  browser: string = "Chrome Mobile 132"
-  os: string = "Android 6"
-  deviceType: string = "Nexus 5"
+  clientId: string = ""
+  lastLogin: string = ""
+  ipAddress: string = ""
+  browser: string = ""
+  os: string = ""
+  deviceType: string = ""
 }
