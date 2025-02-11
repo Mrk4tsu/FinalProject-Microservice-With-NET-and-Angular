@@ -3,11 +3,13 @@ import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
 import {AuthService} from '../../service/auth.service';
 import {isPlatformBrowser} from '@angular/common';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-confirm-password',
-  imports: [],
+  imports: [
+    ReactiveFormsModule
+  ],
   templateUrl: './confirm-password.component.html',
   styleUrl: './confirm-password.component.css'
 })
@@ -32,8 +34,8 @@ export class ConfirmPasswordComponent implements OnInit {
   onSubmit() {
     if (isPlatformBrowser(this.platForm)) {
       const params = this.route.snapshot.queryParams;
-      this.authService.confirmPassword(params['token'], this.form.value.newPassword!).subscribe({
-        next: () => this.status = 'success',
+      this.authService.confirmPassword(params['username'], params['token'], this.form.value.newPassword!).subscribe({
+        next: () => console.log('success'),
         error: (err) => {
           this.status = 'error';
           this.errorMessage = err.error || 'Lỗi xác nhận mật khẩu';

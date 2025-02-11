@@ -14,7 +14,7 @@ import {NgIf} from '@angular/common';
 })
 export class ForgotPasswordComponent {
   form = this.fb.group({
-    newEmail: ['', [Validators.required, Validators.email]]
+    username: ['', [Validators.required]]
   });
   message = '';
 
@@ -25,7 +25,7 @@ export class ForgotPasswordComponent {
   }
 
   onSubmit() {
-    this.authService.requestForgotPassword(this.form.value.newEmail!).subscribe({
+    this.authService.requestForgotPassword(this.form.value.username!).subscribe({
       next: () => this.message = 'Vui lòng kiểm tra email để xác nhận',
       error: (err) => this.message = err.error?.message || 'Lỗi hệ thống'
     });

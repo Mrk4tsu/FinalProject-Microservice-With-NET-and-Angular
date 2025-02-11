@@ -1,10 +1,8 @@
 ﻿using FN.Application.Helper.Mail;
 using FN.Application.Systems.Redis;
 using FN.Utilities;
-using FN.ViewModel.Helper;
 using FN.ViewModel.Systems.User;
 using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
 using System.Text.Json;
 
@@ -64,15 +62,15 @@ namespace FN.EmailService
                         await _mailService.SendMail(req!.NewEmail, $"Xác nhận thay đổi email", SystemConstant.TEMPLATE_UPDATE_MAIL_ID, obj);
                         break;
                     case SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT:
-                        var request = JsonSerializer.Deserialize<ForgotPasswordDTO>(message!);
+                        var request = JsonSerializer.Deserialize<ForgotPasswordResponse>(message!);
                         if (request != null)
                         {
-                            var url = UrlCallback(request.Token, baseDomain ?? "https://mrkatsu.io.vn");
+                            var url = UrlCallback(request.Token, request.Username, baseDomain ?? "https://mrkatsu.io.vn");
                             var objects = new JObject
                             {
                                 {"plink", url}
                             };
-                            await _mailService.SendMail(request.Email, $"Xác nhận khôi phục mật khẩu", SystemConstant.TEMPLATE_UPDATE_MAIL_ID, objects);
+                            await _mailService.SendMail(request.Email, $"Xác nhận khôi phục mật khẩu", SystemConstant.TEMPLATE_RESET_PASSWORD_ID, objects);
                         }
                         break;
                     default:
@@ -90,10 +88,10 @@ namespace FN.EmailService
             var encodedToken = WebUtility.UrlEncode(token);
             return $"{domain}/confirm-email?userId={userId}&newEmail={newEmail}&token={encodedToken}";
         }
-        private string UrlCallback(string token, string domain)
+        private string UrlCallback(string token, string username, string domain)
         {
             var encodedToken = WebUtility.UrlEncode(token);
-            return $"{domain}/confirm-password?token={encodedToken}";
+            return $"{domain}/confirm-password?username={username}&token={encodedToken}";
         }
     }
 }

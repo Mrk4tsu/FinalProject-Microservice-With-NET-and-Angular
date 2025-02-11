@@ -19,6 +19,7 @@
         public const string TEMPLATE_WELCOME_ID = "6710966";
         public const string TEMPLATE_WARNING_ID = "6710973";
         public const string TEMPLATE_UPDATE_MAIL_ID = "6716002";
+        public const string TEMPLATE_RESET_PASSWORD_ID = "6718673";
 
         public const string AVATAR_DEFAULT = "https://res.cloudinary.com/dje3seaqj/image/upload/v1736989161/gatapchoi_biglrl.jpg";
     }

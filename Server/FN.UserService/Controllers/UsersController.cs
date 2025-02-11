@@ -30,9 +30,17 @@ namespace FN.UserService.Controllers
             return BadRequest(result);
         }
         [HttpPost("forgot"), AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string username)
         {
-            var result = await _userService.RequestForgotPassword(email);
+            var result = await _userService.RequestForgotPassword(username);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPost("reset"), AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ForgotPasswordRequest request)
+        {
+            var result = await _userService.ResetPassword(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

@@ -6,6 +6,7 @@ import {AuthComponent} from './layout/auth/auth.component';
 import {ConfirmEmailComponent} from './pages/confirm-email/confirm-email.component';
 import {EmailChangeComponent} from './pages/email-change/email-change.component';
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
+import {ConfirmPasswordComponent} from './pages/confirm-password/confirm-password.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
       {path: 'change-email', component: EmailChangeComponent},
       {path: 'confirm-email', component: ConfirmEmailComponent},
       {path: 'forgot-password', component: ForgotPasswordComponent},
-      {path: 'confirm-password', component: ConfirmEmailComponent}
+      {path: 'confirm-password', component: ConfirmPasswordComponent}
     ]
   },
 ];

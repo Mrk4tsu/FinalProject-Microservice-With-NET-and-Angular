@@ -300,17 +300,29 @@ namespace FN.Application.Systems.User
             return new ApiErrorResult<bool>("Cập nhật ảnh đại diện không thành công");
         }
 
-        public async Task<ApiResult<string>> RequestForgotPassword(string email)
+        public async Task<ApiResult<string>> RequestForgotPassword(string username)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) return new ApiErrorResult<string>("Email không tồn tại");
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) return new ApiErrorResult<string>("User không tồn tại");
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            await _redisService.Publish(SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT, new ForgotPasswordDTO
+            await _redisService.Publish(SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT, new ForgotPasswordResponse
             {
+                Username = user.UserName!,
                 Email = user.Email!,
                 Token = token
             });
             return new ApiSuccessResult<string>(token);
+        }
+
+        public async Task<ApiResult<bool>> ResetPassword(ForgotPasswordRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(request.Username);
+            if (user == null) return new ApiErrorResult<bool>("User không tồn tại");
+            var decodedToken = WebUtility.UrlDecode(request.Token);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, request.NewPassword);
+            if (result.Succeeded)
+                return new ApiSuccessResult<bool>();
+            return new ApiErrorResult<bool>("Khôi phục mật khẩu không thành công");
         }
     }
 }

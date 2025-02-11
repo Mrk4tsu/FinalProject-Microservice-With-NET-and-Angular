@@ -41,8 +41,15 @@ namespace FN.ViewModel.Systems.User
         public string NewEmail { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
     }
-    public class ForgotPasswordDTO
+    public class ForgotPasswordRequest
     {
+        public string Username { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+    }
+    public class ForgotPasswordResponse
+    {
+        public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
 

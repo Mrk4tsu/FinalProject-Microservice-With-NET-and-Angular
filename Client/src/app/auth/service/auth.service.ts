@@ -24,12 +24,15 @@ export class AuthService {
   urlAuth = environment.baseUrl + 'auth';
   urlUser = environment.baseUrl + 'user';
 
-  requestForgotPassword(email: string) {
-    return this.http.post(this.urlUser + '/forgot?email=' + email, {});
+  requestForgotPassword(username: string) {
+    return this.http.post(this.urlUser + '/forgot?username=' + username, {});
   }
-  confirmPassword(token: string, newPassword: string) {
-    return this.http.post(this.urlUser + '/confirm-password', {token, newPassword});
+
+  confirmPassword(username: string, token: string, newPassword: string) {
+    const encodedToken = encodeURIComponent(token);
+    return this.http.post(this.urlUser + '/reset', {username, token: encodedToken, newPassword});
   }
+
   requestEmailChange(newEmail: string) {
     return this.http.post(this.urlUser + '/request?newEmail=' + newEmail, {});
   }
