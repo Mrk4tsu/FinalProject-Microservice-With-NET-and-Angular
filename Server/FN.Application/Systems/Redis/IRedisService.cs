@@ -8,6 +8,8 @@ namespace FN.Application.Systems.Redis
         Task<bool> KeyExist(string key);
 
         // Các phương thức thao tác trực tiếp với Redis thông qua IDatabase
+        Task ListPush<T>(string key, T value);
+        Task ListTrim(string key, long start, long stop);
         Task<List<string>> ListSetValue(string key);
         Task AddValue(string key, string value, TimeSpan? expiry = null);
         Task SetValue<T>(string key, T value, TimeSpan? expiry = null);

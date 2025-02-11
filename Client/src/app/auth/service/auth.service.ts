@@ -24,6 +24,12 @@ export class AuthService {
   urlAuth = environment.baseUrl + 'auth';
   urlUser = environment.baseUrl + 'user';
 
+  requestForgotPassword(email: string) {
+    return this.http.post(this.urlUser + '/forgot?email=' + email, {});
+  }
+  confirmPassword(token: string, newPassword: string) {
+    return this.http.post(this.urlUser + '/confirm-password', {token, newPassword});
+  }
   requestEmailChange(newEmail: string) {
     return this.http.post(this.urlUser + '/request?newEmail=' + newEmail, {});
   }

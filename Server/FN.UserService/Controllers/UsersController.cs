@@ -29,6 +29,14 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
+        [HttpPost("forgot"), AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var result = await _userService.RequestForgotPassword(email);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
         [HttpPost("confirm"), AllowAnonymous]
         public async Task<IActionResult> ConfirmEmailChange(UpdateEmailResponse response)
         {

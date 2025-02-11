@@ -5,15 +5,20 @@ import {RegisterComponent} from './pages/register/register.component';
 import {AuthComponent} from './layout/auth/auth.component';
 import {ConfirmEmailComponent} from './pages/confirm-email/confirm-email.component';
 import {EmailChangeComponent} from './pages/email-change/email-change.component';
+import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 
 const routes: Routes = [
-  {path: '', component: AuthComponent,
-  children:[
-    {path: 'login', component: LoginComponent},
-    {path: 'register', component: RegisterComponent},
-    { path: 'change-email', component: EmailChangeComponent },
-    { path: 'confirm-email', component: ConfirmEmailComponent }
-  ]},
+  {
+    path: '', component: AuthComponent,
+    children: [
+      {path: 'login', component: LoginComponent},
+      {path: 'register', component: RegisterComponent},
+      {path: 'change-email', component: EmailChangeComponent},
+      {path: 'confirm-email', component: ConfirmEmailComponent},
+      {path: 'forgot-password', component: ForgotPasswordComponent},
+      {path: 'confirm-password', component: ConfirmEmailComponent}
+    ]
+  },
 ];
 
 @NgModule({

@@ -20,5 +20,6 @@ namespace FN.Application.Systems.User
         Task<ApiResult<bool>> UpdateAvatar(int userId, IFormFile file);
         Task<ApiResult<bool>> ConfirmEmailChange(UpdateEmailResponse response);
         Task<ApiResult<string>> RequestUpdateMail(int userId, string newEmail);
+        Task<ApiResult<string>> RequestForgotPassword(string email);
     }
 }

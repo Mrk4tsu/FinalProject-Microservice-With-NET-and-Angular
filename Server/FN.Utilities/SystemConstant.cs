@@ -13,6 +13,7 @@
         public const string MESSAGE_REGISTER_EVENT = "myChannel:RegisterEvent";
         public const string MESSAGE_LOGIN_EVENT = "myChannel:LoginEvent";
         public const string MESSAGE_UPDATE_EMAIL_EVENT = "myChannel:EmailEvent";
+        public const string MESSAGE_FORGOT_PASSWORD_EVENT = "myChannel:ForgotPasswordEvent";
 
         public const string TEMPLATE_ORDER_ID = "6705985";
         public const string TEMPLATE_WELCOME_ID = "6710966";

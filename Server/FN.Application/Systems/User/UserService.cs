@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CloudinaryDotNet;
+using FN.Application.Helper.Devices;
 using FN.Application.Helper.Images;
 using FN.Application.Systems.Redis;
 using FN.Application.Systems.Token;
@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
 
 namespace FN.Application.Systems.User
@@ -222,8 +221,22 @@ namespace FN.Application.Systems.User
                 LastLogin = DateTime.Now,
                 OS = device.OS,
             };
+            // Lấy danh sách thiết bị hiện tại từ cơ sở dữ liệu
             var filter = Builders<UserDevice>.Filter.Eq(u => u.UserId, request.UserId);
-            var update = Builders<UserDevice>.Update.Push(u => u.Devices, deviceInfo);
+            var userDevice = await _userDevicesCollection.Find(filter).FirstOrDefaultAsync();
+
+            var deviceList = new DeviceLinkedList(10, request.UserId, _tokenService);
+
+            if (userDevice != null)
+            {
+                // Thêm các thiết bị hiện tại vào Linked List
+                foreach (var deviceItem in userDevice.Devices)
+                {
+                    await deviceList.Add(deviceItem);
+                }
+            }
+            await deviceList.Add(deviceInfo);
+            var update = Builders<UserDevice>.Update.Set(u => u.Devices, deviceList.ToList());
             await _userDevicesCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
         }
         public async Task<ApiResult<List<DeviceInfoDetail>>> GetRegisteredDevices(int userId)
@@ -285,6 +298,19 @@ namespace FN.Application.Systems.User
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded) return new ApiSuccessResult<bool>();
             return new ApiErrorResult<bool>("Cập nhật ảnh đại diện không thành công");
+        }
+
+        public async Task<ApiResult<string>> RequestForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null) return new ApiErrorResult<string>("Email không tồn tại");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _redisService.Publish(SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT, new ForgotPasswordDTO
+            {
+                Email = user.Email!,
+                Token = token
+            });
+            return new ApiSuccessResult<string>(token);
         }
     }
 }

@@ -29,6 +29,7 @@ namespace FN.EmailService
             {
                 using var scope = _serviceProvider.CreateScope();
                 var emailService = scope.ServiceProvider.GetRequiredService<IMailService>();
+                var baseDomain = _configuration["BaseDomain"];
                 switch ((string)channel!)
                 {
                     case SystemConstant.MESSAGE_REGISTER_EVENT:
@@ -54,13 +55,25 @@ namespace FN.EmailService
                         break;
                     case SystemConstant.MESSAGE_UPDATE_EMAIL_EVENT:
                         var req = JsonSerializer.Deserialize<UpdateEmailResponse>(message!);
-                        var baseDomain = _configuration["BaseDomain"];
-                        var link = UrlCallback(req.UserId, req.NewEmail, req.Token, baseDomain ?? "https://mrkatsu.io.vn");
+
+                        var link = UrlCallback(req!.UserId, req.NewEmail, req.Token, baseDomain ?? "https://mrkatsu.io.vn");
                         var obj = new JObject
                         {
                             {"plink", link}
                         };
                         await _mailService.SendMail(req!.NewEmail, $"Xác nhận thay đổi email", SystemConstant.TEMPLATE_UPDATE_MAIL_ID, obj);
+                        break;
+                    case SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT:
+                        var request = JsonSerializer.Deserialize<ForgotPasswordDTO>(message!);
+                        if (request != null)
+                        {
+                            var url = UrlCallback(request.Token, baseDomain ?? "https://mrkatsu.io.vn");
+                            var objects = new JObject
+                            {
+                                {"plink", url}
+                            };
+                            await _mailService.SendMail(request.Email, $"Xác nhận khôi phục mật khẩu", SystemConstant.TEMPLATE_UPDATE_MAIL_ID, objects);
+                        }
                         break;
                     default:
                         break;
@@ -72,10 +85,15 @@ namespace FN.EmailService
                 await Task.Delay(1000, stoppingToken);
             }
         }
-        private string UrlCallback(int userId, string newEmail, string token, string domain)
+        private string UrlCallback(int userId, string token, string domain, string? newEmail = null)
         {
             var encodedToken = WebUtility.UrlEncode(token);
             return $"{domain}/confirm-email?userId={userId}&newEmail={newEmail}&token={encodedToken}";
+        }
+        private string UrlCallback(string token, string domain)
+        {
+            var encodedToken = WebUtility.UrlEncode(token);
+            return $"{domain}/confirm-password?token={encodedToken}";
         }
     }
 }

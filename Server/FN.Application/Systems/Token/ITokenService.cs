@@ -1,8 +1,5 @@
 ﻿using FN.DataAccess.Entities;
-using FN.ViewModel.Helper.API;
-using FN.ViewModel.Helper.Device;
 using FN.ViewModel.Systems.Token;
-using System.Security.Claims;
 
 namespace FN.Application.Systems.Token
 {
