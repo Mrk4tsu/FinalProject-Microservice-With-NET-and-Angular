@@ -10,7 +10,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/user/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
     },
     {
       "DownstreamPathTemplate": "/api/auth/{everything}",

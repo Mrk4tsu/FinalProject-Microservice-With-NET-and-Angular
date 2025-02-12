@@ -4,7 +4,7 @@ import {environment} from '../../../environments/environment';
 import {CookieService} from 'ngx-cookie-service';
 import {ACCESS_TOKEN_KEY, CLIENT_ID_KEY, REFRESH_TOKEN_KEY} from '../../shared/constant';
 import {jwtDecode} from 'jwt-decode';
-import {BehaviorSubject, catchError, filter, Observable, switchMap, take, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, filter, map, Observable, switchMap, take, tap, throwError} from 'rxjs';
 import {isPlatformBrowser} from '@angular/common';
 
 @Injectable({
@@ -60,7 +60,32 @@ export class AuthService {
       })
     );
   }
+  refreshTokenSimple(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    const clientId = this.getClientId();
 
+    if (!refreshToken || !clientId) {
+      this.deleteToken();
+      return throwError(() => new Error('Missing credentials'));
+    }
+
+    const userId = this.decodeTokenToUser(this.getAccessToken())?.userId;
+
+    return this.http.post<any>(this.urlAuth + '/refresh-token', {
+      refreshToken,
+      clientId,
+      userId
+    }).pipe(
+      tap((res) => {
+        const { accessToken, refreshToken, clientId, refreshTokenExpiry } = res.data;
+        this.saveToken(accessToken, refreshToken, clientId, refreshTokenExpiry);
+      }),
+      catchError((error) => {
+        this.deleteToken();
+        return throwError(() => error);
+      })
+    );
+  }
   refreshToken(): Observable<any> {
     if (this.refreshTokenSubject.value === null) {
       this.refreshTokenSubject.next(null);
@@ -93,6 +118,7 @@ export class AuthService {
         filter(token => token !== null),
         take(1),
         switchMap((): Observable<any> => {
+          console.log('Token refreshed');
           return this.refreshToken();
         })
       );
@@ -116,6 +142,23 @@ export class AuthService {
     });
     if (isPlatformBrowser(this.flatForm))
       window.location.reload();
+  }
+
+  updateAvatar(formData: any) {
+    return this.http.put(this.urlUser + '/avatar', formData).pipe(
+      switchMap((res) => {
+        return this.refreshTokenSimple().pipe(
+          catchError((error) => {
+            console.error('Lỗi khi refresh token:', error);
+            return throwError(() => error);
+          })
+        );
+      }),
+      catchError((error) => {
+        console.error('Lỗi khi upload avatar:', error);
+        return throwError(() => error);
+      })
+    );
   }
 
   getDevices() {

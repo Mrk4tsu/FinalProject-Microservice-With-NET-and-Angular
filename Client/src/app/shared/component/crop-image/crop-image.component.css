@@ -1,4 +1,4 @@
-/* Modal container */
+/* Modal */
 .modal {
   position: fixed;
   top: 0;
@@ -12,26 +12,17 @@
   z-index: 1000;
 }
 
-/* Modal content */
 .modal-content {
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   max-width: 90%;
   max-height: 90%;
-  width: 800px; /* Chiều rộng tối đa của modal */
-  height: 600px; /* Chiều cao tối đa của modal */
+  width: 800px;
+  height: 600px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-/* Modal header */
-.modal-header {
-  padding: 16px;
-  border-bottom: 1px solid #ddd;
-  font-size: 1.25rem;
-  font-weight: bold;
 }
 
 .modal-body {
@@ -42,45 +33,22 @@
   overflow: hidden;
 }
 
-/* CSS cho cropper */
-.image-cropper-container {
-  width: 100%;
-  height: 100%;
+/* Preview container */
+.preview-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.preview-image img {
   max-width: 100%;
-  max-height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  max-height: 300px;
+  border-radius: 8px;
 }
 
-ngx-image-cropper {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-}
-/* Modal footer */
-.modal-footer {
-  padding: 16px;
-  border-top: 1px solid #ddd;
-  text-align: right;
+.preview-actions {
+  margin-top: 10px;
 }
 
-/* Nút đóng modal */
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* Responsive cho modal */
-@media (max-width: 768px) {
-  .modal-content {
-    max-width: 95%;
-    max-height: 95%;
-  }
+.preview-actions button {
+  margin: 0 5px;
 }
