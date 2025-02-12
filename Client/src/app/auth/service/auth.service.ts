@@ -97,30 +97,6 @@ export class AuthService {
         })
       );
     }
-    // const refreshToken = this.getRefreshToken();
-    // const clientId = this.getClientId();
-    // if (!refreshToken || !clientId) {
-    //   console.error('Refresh token hoặc ClientID bị thiếu!');
-    //   this.deleteToken();
-    //   return throwError(() => new Error('Thiếu thông tin xác thực'));
-    // }
-    //
-    // const accessToken = this.getAccessToken();
-    // const userId = this.decodeTokenToUser(accessToken)?.userId;
-    // return this.http
-    //   .post<any>(this.url + '/refresh-token', {refreshToken, clientId, userId})
-    //   .pipe(
-    //     tap((res: any) => {
-    //       const {accessToken, refreshToken, clientId, refreshTokenExpiry} = res.data;
-    //       this.saveToken(accessToken, refreshToken, clientId, refreshTokenExpiry);
-    //     }),
-    //     map((res: any) => res.data.accessToken),
-    //     catchError((error) => {
-    //       console.error('Refresh token request failed:', error);
-    //       this.deleteToken();
-    //       return throwError(error);
-    //     })
-    //   )
   }
 
   logOut() {
@@ -130,13 +106,16 @@ export class AuthService {
       next: () => {
         this.deleteToken();
         this.cookieService.delete(CLIENT_ID_KEY, '/');
-        this.updateUser(new User());
+
+        this.updateUser({userId: 0, fullName: '', avatar: '', role: ''});
       },
       error: (err) => {
         this.deleteToken();
         this.cookieService.delete(CLIENT_ID_KEY, '/');
       }
     });
+    if (isPlatformBrowser(this.flatForm))
+      window.location.reload();
   }
 
   getDevices() {

@@ -1,12 +1,9 @@
 ﻿using FN.Application.Systems.Redis;
 using FN.Application.Systems.User;
 using FN.Utilities;
-using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
-using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 
 namespace FN.UserService.Controllers
 {

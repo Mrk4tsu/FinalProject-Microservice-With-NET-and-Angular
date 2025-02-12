@@ -1,6 +1,8 @@
 import {ChangeDetectorRef, Component, inject, PLATFORM_ID} from '@angular/core';
 import {AuthService, User} from '../../../auth/service/auth.service';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {ModalService} from '../../../shared/component/modal/modal.service';
+import {Router} from '@angular/router';
 
 declare var bootstrap: any;
 
@@ -22,7 +24,10 @@ export class HomeComponent {
   user: User | null = new User();
   currentDeviceId: string = '';
 
-  constructor(public authService: AuthService, private cdr: ChangeDetectorRef) {
+  constructor(public authService: AuthService,
+              private modal: ModalService,
+              private router: Router,
+              private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -45,6 +50,19 @@ export class HomeComponent {
         }
       });
     }
+  }
+
+  hrefTo(url: string) {
+    if (!this.authService.isLoggedIn()) {
+      this.modal.showDialog('Login Required', 'Please login to continue.', 'Đăng nhập')
+        .then((confirmed) => {
+          if (confirmed) {
+            this.router.navigate(['/login']);
+          }
+        });
+      return;
+    }
+    this.router.navigate([url]);
   }
 
   onDeleteDevice(clientId: string) {
