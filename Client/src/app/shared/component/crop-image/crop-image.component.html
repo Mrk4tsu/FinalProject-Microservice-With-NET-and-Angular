@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="mb-3">
+    <input
+      type="file"
+      class="form-control"
+      (change)="fileChangeEvent($event)"
+      accept="image/*"
+    >
+  </div>
+
+  <!-- Modal crop ảnh -->
+  @if (showCropper) {
+    <div class="modal">
+      <div class="modal-content">
+        <button class="modal-close" (click)="showCropper = false">&times;</button>
+        <div class="modal-header">Cắt ảnh đại diện</div>
+        <div class="modal-body">
+          <image-cropper
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1/1"
+            format="png"
+            (imageCropped)="imageCropped($event)"
+          ></image-cropper>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="showCropper = false">Hủy</button>
+          <button class="btn btn-primary" (click)="uploadAvatar()">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+  }
+  <!-- Preview ảnh -->
+  @if (croppedImage) {
+    <div class="mt-3">
+      <img alt="" [src]="croppedImage" class="img-thumbnail" width="150">
+    </div>
+  }
+
+</div>
