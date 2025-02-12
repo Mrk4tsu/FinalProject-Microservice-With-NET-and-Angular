@@ -1,8 +1,7 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {ModalService} from '../../../shared/component/modal/modal.service';
-import {ModalComponent} from '../../../shared/component/modal/modal.component';
+import {Component, Inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {AuthService} from '../../../auth/service/auth.service';
 import {Router} from '@angular/router';
+import {isPlatformBrowser} from '@angular/common';
 
 @Component({
   selector: 'app-user',
@@ -10,21 +9,18 @@ import {Router} from '@angular/router';
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
-export class UserComponent implements AfterViewInit {
-  constructor(private modalService: ModalService,
-              private router: Router,
+export class UserComponent implements OnInit {
+  constructor(private router: Router,
+              @Inject(PLATFORM_ID) private platformId: Object,
               private auth: AuthService) {
 
   }
 
-  ngAfterViewInit() {
-    if (!this.auth.isLoggedIn()) {
-      this.modalService.showLoginRequired()
-        .then((confirmed) => {
-          if (confirmed) {
-            this.router.navigate(['/login']);
-          }
-        });
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.auth.isLoggedIn()) {
+        this.router.navigate(['/login']);
+      }
     }
   }
 }

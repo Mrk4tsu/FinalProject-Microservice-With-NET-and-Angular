@@ -1,5 +1,3 @@
-using FN.Application.Helper.Devices;
-using FN.Application.MapProfile;
 using FN.Application.Systems.Token;
 using FN.Application.Systems.User;
 using FN.Extensions;
@@ -16,6 +14,7 @@ builder.Services.AddSwaggerExplorer()
     .ConfigureIdentityOptions()
     .AddImageConfig(builder.Configuration);
 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 

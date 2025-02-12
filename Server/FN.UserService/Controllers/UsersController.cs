@@ -18,6 +18,7 @@ namespace FN.UserService.Controllers
             _redisService = redisService;
             _userService = userService;
         }
+        
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Get(int userId)
         {
@@ -26,7 +27,18 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("forgot"), AllowAnonymous]
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null) return Unauthorized();
+            request.UserId = userId.Value;
+            var result = await _userService.ChangePassword(request);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPost("request-forgot"), AllowAnonymous]    
         public async Task<IActionResult> ForgotPassword(string username)
         {
             var result = await _userService.RequestForgotPassword(username);
@@ -34,7 +46,7 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("reset"), AllowAnonymous]
+        [HttpPost("reset-password"), AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ForgotPasswordRequest request)
         {
             var result = await _userService.ResetPassword(request);
@@ -42,7 +54,7 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("confirm"), AllowAnonymous]
+        [HttpPost("confirm-email"), AllowAnonymous]
         public async Task<IActionResult> ConfirmEmailChange(UpdateEmailResponse response)
         {
             var result = await _userService.ConfirmEmailChange(response);
@@ -50,7 +62,7 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("request")]
+        [HttpPost("request-email")]
         public async Task<IActionResult> RequestUpdateMail(string newEmail)
         {
             var userId = GetUserIdFromClaims();

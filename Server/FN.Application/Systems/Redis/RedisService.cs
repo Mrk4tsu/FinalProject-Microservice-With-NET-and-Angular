@@ -49,6 +49,20 @@ namespace FN.Application.Systems.Redis
         {
             await _database.SetRemoveAsync(key, value);
         }
+        public List<string> GetKeysByPattern(string pattern)
+        {
+            var keys = new List<string>();
+            var endpoints = _database.Multiplexer.GetEndPoints();
+            foreach (var endpoint in endpoints)
+            {
+                var server = _database.Multiplexer.GetServer(endpoint);
+                foreach (var key in server.Keys(pattern: pattern))
+                {
+                    keys.Add(key.ToString());
+                }
+            }
+            return keys;
+        }
         public async Task<T?> GetValue<T>(string key)
         {
             var json = await _database.StringGetAsync(key);

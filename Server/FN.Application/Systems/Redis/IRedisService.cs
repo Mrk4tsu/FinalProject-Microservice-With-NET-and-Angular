@@ -13,6 +13,7 @@ namespace FN.Application.Systems.Redis
         Task<List<string>> ListSetValue(string key);
         Task AddValue(string key, string value, TimeSpan? expiry = null);
         Task SetValue<T>(string key, T value, TimeSpan? expiry = null);
+        List<string> GetKeysByPattern(string pattern);
         Task<T?> GetValue<T>(string key);
         Task<bool> SetContains(string key, string value);
         Task RemoveSetValue(string key, string value);

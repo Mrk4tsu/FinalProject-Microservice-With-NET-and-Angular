@@ -11,14 +11,16 @@ namespace FN.UserService.Controllers
     public class AuthsController : BasesController
     {
         private readonly IUserService _userService;
-        public AuthsController(IUserService userService)
+        private readonly IAuthService _authService;
+        public AuthsController(IUserService userService, IAuthService authService)
         {
+            _authService = authService;
             _userService = userService;
         }
         [HttpPost("register"), AllowAnonymous]
         public async Task<IActionResult> Register(RegisterDTO register)
         {
-            var result = await _userService.Register(register);
+            var result = await _authService.Register(register);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
@@ -26,7 +28,7 @@ namespace FN.UserService.Controllers
         [HttpPost("login"), AllowAnonymous]
         public async Task<IActionResult> Login(LoginDTO login)
         {
-            var result = await _userService.Authenticate(login, HttpContext);
+            var result = await _authService.Authenticate(login, HttpContext);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
@@ -34,7 +36,7 @@ namespace FN.UserService.Controllers
         [HttpPost("logout"), AllowAnonymous]
         public async Task<IActionResult> Logout(TokenRequest request)
         {
-            var result = await _userService.RevokeDevice(request);
+            var result = await _authService.RevokeDevice(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
@@ -44,7 +46,7 @@ namespace FN.UserService.Controllers
         {
             var userId = GetUserIdFromClaims();
             if (userId == null) return Unauthorized();
-            var result = await _userService.GetRegisteredDevices(userId.Value);
+            var result = await _authService.GetRegisteredDevices(userId.Value);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
@@ -60,7 +62,7 @@ namespace FN.UserService.Controllers
                 UserId = userId.Value,
                 ClientId = clientId
             };
-            var result = await _userService.RevokeDevice(request);
+            var result = await _authService.RevokeDevice(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
@@ -68,7 +70,7 @@ namespace FN.UserService.Controllers
         [HttpPost("refresh-token"), AllowAnonymous]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
         {
-            var result = await _userService.RefreshToken(request);
+            var result = await _authService.RefreshToken(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

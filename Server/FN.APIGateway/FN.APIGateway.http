@@ -4,3 +4,13 @@ GET {{FN.APIGateway_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+POST {{FN.APIGateway_HostAddress}}/api/auth/login
+Accept: application/json
+Content-Type: application/json
+{
+  "username": "gatapchoi",
+  "password": Abc@1234,
+  "clientId": "Freezing",
+  "userAgent": "??",
+  rememberMe: false
+}

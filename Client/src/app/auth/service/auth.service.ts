@@ -13,10 +13,6 @@ import {isPlatformBrowser} from '@angular/common';
 export class AuthService {
   flatForm = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.loadUserFromToken();
-  }
-
   private refreshTokenSubject = new BehaviorSubject<any>(null);
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
@@ -24,22 +20,31 @@ export class AuthService {
   urlAuth = environment.baseUrl + 'auth';
   urlUser = environment.baseUrl + 'user';
 
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+    this.loadUserFromToken();
+  }
+
+  changePassword(formData: any) {
+    const userId = this.getCurrentUser()?.userId;
+    return this.http.put(this.urlUser + '/change-password', {...formData, userId});
+  }
+
   requestForgotPassword(username: string) {
-    return this.http.post(this.urlUser + '/forgot?username=' + username, {});
+    return this.http.post(this.urlUser + '/request-forgot?username=' + username, {});
   }
 
   confirmPassword(username: string, token: string, newPassword: string) {
     const encodedToken = encodeURIComponent(token);
-    return this.http.post(this.urlUser + '/reset', {username, token: encodedToken, newPassword});
+    return this.http.post(this.urlUser + '/reset-password', {username, token: encodedToken, newPassword});
   }
 
   requestEmailChange(newEmail: string) {
-    return this.http.post(this.urlUser + '/request?newEmail=' + newEmail, {});
+    return this.http.post(this.urlUser + '/request-email?newEmail=' + newEmail, {});
   }
 
   confirmEmailChange(userId: string, newEmail: string, token: string) {
     const encodedToken = encodeURIComponent(token);
-    return this.http.post(this.urlUser + '/confirm', {userId, newEmail, token: encodedToken});
+    return this.http.post(this.urlUser + '/confirm-email', {userId, newEmail, token: encodedToken});
   }
 
   register(formData: any) {
@@ -60,6 +65,7 @@ export class AuthService {
       })
     );
   }
+
   refreshTokenSimple(): Observable<any> {
     const refreshToken = this.getRefreshToken();
     const clientId = this.getClientId();
@@ -77,7 +83,7 @@ export class AuthService {
       userId
     }).pipe(
       tap((res) => {
-        const { accessToken, refreshToken, clientId, refreshTokenExpiry } = res.data;
+        const {accessToken, refreshToken, clientId, refreshTokenExpiry} = res.data;
         this.saveToken(accessToken, refreshToken, clientId, refreshTokenExpiry);
       }),
       catchError((error) => {
@@ -86,6 +92,7 @@ export class AuthService {
       })
     );
   }
+
   refreshToken(): Observable<any> {
     if (this.refreshTokenSubject.value === null) {
       this.refreshTokenSubject.next(null);

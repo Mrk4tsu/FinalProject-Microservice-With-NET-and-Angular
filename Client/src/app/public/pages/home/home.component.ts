@@ -54,7 +54,7 @@ export class HomeComponent {
 
   hrefTo(url: string) {
     if (!this.authService.isLoggedIn()) {
-      this.modal.showDialog('Login Required', 'Please login to continue.', 'Đăng nhập')
+      this.modal.showDialog('Login Required', 'Please login to continue.', 'Đăng nhập', true)
         .then((confirmed) => {
           if (confirmed) {
             this.router.navigate(['/login']);

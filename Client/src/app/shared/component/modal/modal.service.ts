@@ -27,13 +27,13 @@ export class ModalService {
     return new Promise<boolean>((resolve) => resolve(false));
   }
 
-  showDialog(title: string, message: string, btnText: string = 'OK'): Promise<boolean> {
+  showDialog(title: string, message: string, btnText: string = 'OK', cancelBtn: boolean): Promise<boolean> {
     if (this.isBrowser) {
       const modalRef = this.modalService.open(ModalComponent);
       modalRef.componentInstance.title = title;
       modalRef.componentInstance.message = message;
       modalRef.componentInstance.btnText = btnText;
-      modalRef.componentInstance.showCancel = false;
+      modalRef.componentInstance.showCancel = cancelBtn;
       return modalRef.result.then(() => true).catch(() => false);
     }
     return new Promise<boolean>((resolve) => resolve(false));

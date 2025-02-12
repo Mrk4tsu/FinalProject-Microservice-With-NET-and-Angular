@@ -57,7 +57,7 @@ namespace FN.Application.Helper.Devices
             else
             {
                 var current = _head;
-                while (current.Next.Next != null)
+                while (current.Next!.Next != null)
                 {
                     current = current.Next;
                 }

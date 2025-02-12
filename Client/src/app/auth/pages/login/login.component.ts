@@ -50,6 +50,7 @@ export class LoginComponent {
           }
         },
         error: (err) => {
+          this.isLoading = false;
           this.toast.error(err.error.message);
         },
       });

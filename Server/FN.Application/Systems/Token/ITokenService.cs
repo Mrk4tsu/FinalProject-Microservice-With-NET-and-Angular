@@ -9,6 +9,7 @@ namespace FN.Application.Systems.Token
         string GenerateRefreshToken();
         Task SaveRefreshToken(string refreshToken, TokenRequest request, TimeSpan expiry);
         Task RemoveRefreshToken(TokenRequest request);
+        Task RemoveAllTokensForUser(int userId);
         Task<string?> GetRefreshToken(TokenRequest request);
     }
 }

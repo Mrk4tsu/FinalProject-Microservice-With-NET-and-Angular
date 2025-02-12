@@ -7,6 +7,8 @@ import {ConfirmEmailComponent} from './pages/confirm-email/confirm-email.compone
 import {EmailChangeComponent} from './pages/email-change/email-change.component';
 import {ForgotPasswordComponent} from './pages/forgot-password/forgot-password.component';
 import {ConfirmPasswordComponent} from './pages/confirm-password/confirm-password.component';
+import {ChangePasswordComponent} from './pages/change-password/change-password.component';
+import {authGuard} from './service/helper/auth.guard';
 
 const routes: Routes = [
   {
@@ -14,10 +16,11 @@ const routes: Routes = [
     children: [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
-      {path: 'change-email', component: EmailChangeComponent},
-      {path: 'confirm-email', component: ConfirmEmailComponent},
-      {path: 'forgot-password', component: ForgotPasswordComponent},
-      {path: 'confirm-password', component: ConfirmPasswordComponent}
+      {path: 'change-email', component: EmailChangeComponent, canActivate: [authGuard]},
+      {path: 'confirm-email', component: ConfirmEmailComponent, canActivate: [authGuard]},
+      {path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [authGuard]},
+      {path: 'confirm-password', component: ConfirmPasswordComponent, canActivate: [authGuard]},
+      {path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard]}
     ]
   },
 ];

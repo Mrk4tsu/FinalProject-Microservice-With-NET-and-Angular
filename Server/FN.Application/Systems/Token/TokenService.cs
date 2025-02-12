@@ -57,6 +57,15 @@ namespace FN.Application.Systems.Token
             var key = $"auth:{request.UserId}:refresh_token:{request.ClientId}";
             return await _redisService.GetValue<string>(key);
         }
+        public async Task RemoveAllTokensForUser(int userId)
+        {
+            var pattern = $"auth:{userId}:*";
+            var keys =  _redisService.GetKeysByPattern(pattern);
+            foreach (var key in keys)
+            {
+                await _redisService.RemoveValue(key);
+            }
+        }
         public async Task RemoveRefreshToken(TokenRequest request)
         {
             var key = $"auth:{request.UserId}:refresh_token:{request.ClientId}";
