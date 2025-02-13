@@ -1,15 +1,14 @@
-import {ChangeDetectorRef, Component, inject, PLATFORM_ID} from '@angular/core';
-import {AuthService, User} from '../../../auth/service/auth.service';
+import {Component, inject, OnInit, PLATFORM_ID, Renderer2} from '@angular/core';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
-import {ModalService} from '../../../shared/component/modal/modal.service';
-import {Router} from '@angular/router';
-
-declare var bootstrap: any;
+import {RecommendComponent} from './recommend/recommend.component';
+import {TopBlogComponent} from './top-blog/top-blog.component';
 
 @Component({
   selector: 'app-home',
   imports: [
-    CommonModule
+    CommonModule,
+    RecommendComponent,
+    TopBlogComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: [
@@ -17,96 +16,33 @@ declare var bootstrap: any;
     '../../layout/public/public.component.css'
   ]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   platForm = inject(PLATFORM_ID);
 
-  isLoading: boolean = false;
-  user: User | null = new User();
-  currentDeviceId: string = '';
-
-  constructor(public authService: AuthService,
-              private modal: ModalService,
-              private router: Router,
-              private cdr: ChangeDetectorRef) {
+  constructor(private renderer: Renderer2) {
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-      this.cdr.detectChanges(); // Ensure the UI updates
-    });
-    if (this.authService.isLoggedIn()) {
-      this.isLoading = true;
-      this.authService.getDevices().subscribe({
-        next: (res: any) => {
-          this.isLoading = false;
-          this.authService.devices = res.data;
-
-          console.log(res);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          console.error(err);
-        }
-      });
-    }
-  }
-
-  hrefTo(url: string) {
-    if (!this.authService.isLoggedIn()) {
-      this.modal.showDialog('Login Required', 'Please login to continue.', 'Đăng nhập', true)
-        .then((confirmed) => {
-          if (confirmed) {
-            this.router.navigate(['/login']);
-          }
-        });
-      return;
-    }
-    this.router.navigate([url]);
-  }
-
-  onDeleteDevice(clientId: string) {
-    if (this.isCurrentDevice(clientId)) {
-      this.showConfirmLogoutModal();
-    } else {
-      this.deleteDevice(clientId);
-    }
-  }
-
-  deleteDevice(clientId: string) {
-    this.authService.revokeDevice(clientId).subscribe({
-      next: (res: any) => {
-        this.authService.devices = this.authService.devices.filter((device: any) => device.clientId !== clientId);
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-  }
-
-  showConfirmLogoutModal() {
     if (isPlatformBrowser(this.platForm)) {
-      const modalElement = document.getElementById('confirmLogoutModal');
-      if (modalElement) {
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-      }
+      this.initializeSeasonalThemes();
     }
   }
 
-  onLogout() {
-    this.authService.logOut();
-  }
+  initializeSeasonalThemes(): void {
+    const today = new Date();
+    const startChristmas = new Date(today.getFullYear(), 11, 1);
+    const endChristmas = new Date(today.getFullYear(), 11, 30);
 
-  confirmDeleteCurrentDevice() {
-    this.deleteDevice(this.currentDeviceId);
-    this.onLogout();
-  }
+    const startLunar = new Date(today.getFullYear(), 0, 1);
+    const endLunar = new Date(today.getFullYear(), 1, 28);
 
-  isCurrentDevice(clientId: string): boolean {
-    if (clientId === this.authService.getClientId())
-      return true;
-    else
-      return false;
+    const imageSection = document.querySelector('.image-section');
+    if (imageSection) {
+      if (today >= startChristmas && today <= endChristmas) {
+        this.renderer.addClass(imageSection, 'christmas');
+      } else if (today >= startLunar && today <= endLunar) {
+        this.renderer.addClass(imageSection, 'lunar');
+      }
+    }
   }
 }

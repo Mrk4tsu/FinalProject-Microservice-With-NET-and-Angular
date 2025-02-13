@@ -1,0 +1,94 @@
+<nav class="navbar-pc navbar-expand-custom shadow bg-soft-screen">
+  <a class="navbar-brand" href="/">
+    <img class="mx-4" src="assets/public/images/logo.png" style="max-width: 100px; height: auto" alt="Mrkatsu Logo">
+  </a>
+  <ul class="navbar-nav d-flex flex-row flex-grow-1 justify-content-center menu py-2" #menu>
+    <li class="nav-item">
+      <a class="nav-link mx-3 active" href="/">
+        <span class="menu-icon bg-gradient-primary shadow-primary material-symbols-rounded">house</span>
+        Trang chủ
+      </a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link mx-2" href="#" data-bs-toggle="dropdown">
+        <span class="menu-icon bg-gradient-success shadow-success material-symbols-rounded">dashboard</span>
+        Sản phẩm
+
+      </a>
+      <div class="category bg-soft-screen dropdown-menu shadow-sm">
+        <div class="d-flex justify-content-center align-items-center">
+<!--          <a *ngFor="let item of this.productService.listCategories" [href]="['/product/' + item.seoAlias]"-->
+<!--             class="category-item {{item.other}}">-->
+<!--            <img [src]="item.seoImage" alt="Android Icon" class="category-icon">-->
+<!--          </a>-->
+        </div>
+        <a href="/product/all" class="text-center d-flex justify-content-center text-decoration-none">
+          Xem tất cả
+          <i class="fas fa-long-arrow-alt-right mt-1 ms-3"></i>
+        </a>
+      </div>
+
+    </li>
+    <li class="nav-item">
+      <a class="nav-link mx-2" href="/blog">
+        <span class="menu-icon bg-gradient-danger shadow-danger material-symbols-rounded">newspaper</span>
+        Bài viết
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link mx-2" href="/forum">
+        <span class="menu-icon bg-gradient-warning shadow-warning material-symbols-rounded">forum</span>
+        Forum
+      </a>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link mx-2" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="menu-icon bg-gradient-info shadow-info material-symbols-rounded">more_horiz</span>
+        Khác
+      </a>
+      <ul class="dropdown-menu bg-soft-screen shadow-info m-0 p-0 round-6" aria-labelledby="moreDropdown">
+        <li>
+          <p class="m-0 text-center py-2 small px-5 text-tian-light">
+                        <span>
+                            <i class="fas fa-vr-cardboard fa-flip-both text-tian-light"></i>
+                        </span>
+          </p>
+        </li>
+        <li>
+          <a class="dropdown-item text-center" href="/data-nro">
+            Data NRO
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item text-center" href="">
+            Terms of use
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item text-center" href="#">
+            Privacy Policy
+          </a>
+        </li>
+        <li><a class="dropdown-item text-center mb-3" href="javascript:void (0)">Feedback</a></li>
+      </ul>
+    </li>
+  </ul>
+  <div class="d-flex align-items-center px-4">
+    <form class="search-form" #searchForm>
+      <div class="position-relative">
+        <input type="text" name="q" class="form-control" placeholder="Tìm kiếm..."/>
+        <button type="submit" class="bg-transparent border-0 position-absolute" style="bottom: 15%; right: 0.5rem">
+          <i class="fa fa-search" style="color: var(--text-color)"></i>
+        </button>
+      </div>
+    </form>
+    <button class="bg-transparent mx-1 border-0" id="search-icon" #searchIcon>
+      <i class="fa fa-search" aria-hidden="true"></i>
+    </button>
+
+    <button class="bg-success-25 mx-1 menu-icon rounded-circle border-0 p-1"
+            data-bs-target="#loginModal" data-bs-toggle="modal" id="user-icon">
+      <span class="material-symbols-rounded text-tian-light">account_circle</span>
+    </button>
+  </div>
+</nav>

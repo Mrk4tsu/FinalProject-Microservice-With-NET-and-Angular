@@ -1,8 +1,10 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, PLATFORM_ID} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../service/auth.service';
 import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
+import {ThemeService} from '../../../shared/services/theme.service';
+import {isPlatformBrowser} from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -15,12 +17,24 @@ import {Router} from '@angular/router';
 export class LoginComponent {
   isSubmitted: boolean = false;
   isLoading: boolean = false;
+  platForm = inject(PLATFORM_ID);
 
   constructor(private toast: ToastrService,
               private service: AuthService,
               private router: Router,
+              private cdr: ChangeDetectorRef,
+              private themeService: ThemeService,
               public formBuilder: FormBuilder) {
     this.service.deleteToken();
+  }
+
+  ngOnInit() {
+    if (isPlatformBrowser(this.platForm)) {
+      this.themeService.theme$.subscribe(theme => {
+        document.body.className = theme;
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   form = this.formBuilder.group({

@@ -1,20 +1,29 @@
 import {Component} from '@angular/core';
 import {AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidatorFn, Validators} from '@angular/forms';
-import {FirstkeyPipe} from '../../service/helper/firstkey.pipe';
 import {AuthService} from '../../service/auth.service';
 import {ToastrService} from 'ngx-toastr';
 import {catchError, throwError} from 'rxjs';
+import {NgSwitch, NgSwitchCase} from '@angular/common';
+import {FistKeyPipe} from './fist-key.pipe';
+import {Router} from '@angular/router';
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, ReactiveFormsModule, FirstkeyPipe],
+  imports: [FormsModule, ReactiveFormsModule, NgSwitch, NgSwitchCase, FistKeyPipe],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: [
+    './register.component.css',
+    '../../layout/auth/auth.component.css'
+  ]
 })
 export class RegisterComponent {
   isSubmitted: boolean = false;
   isLoading: boolean = false;
-
-  constructor(public formBuilder: FormBuilder, private service: AuthService, private toast: ToastrService) {
+  successMessage: string | null = null;
+  countdown: number = 0;
+  constructor(public formBuilder: FormBuilder,
+              private service: AuthService,
+              private router: Router,
+              private toast: ToastrService) {
   }
   form = this.formBuilder.group({
     userName: ['', Validators.required],
@@ -59,6 +68,18 @@ export class RegisterComponent {
           if (res.success) {
             this.form.reset();
             this.isSubmitted = false;
+            this.successMessage = 'Đăng kí thành công!';
+            this.toast.success(this.successMessage, 'Success');
+            this.countdown = 5;
+            const interval = setInterval(() => {
+              this.countdown--;
+              if (this.countdown === 0) {
+                clearInterval(interval);
+                this.toast.clear();
+                this.router.navigate(['/signin']);
+              }
+            }, 1000);
+
             this.isLoading = false;
             this.toast.success('Account created successfully', 'Success');
           }
