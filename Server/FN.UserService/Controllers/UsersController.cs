@@ -18,7 +18,6 @@ namespace FN.UserService.Controllers
             _redisService = redisService;
             _userService = userService;
         }
-        
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Get(int userId)
         {
@@ -38,7 +37,7 @@ namespace FN.UserService.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("request-forgot"), AllowAnonymous]    
+        [HttpPost("request-forgot"), AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(string username)
         {
             var result = await _userService.RequestForgotPassword(username);
@@ -84,6 +83,16 @@ namespace FN.UserService.Controllers
             var userId = GetUserIdFromClaims();
             if (userId == null) return Unauthorized();
             var result = await _userService.UpdateAvatar(userId.Value, file);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPut("change-name")]
+        public async Task<IActionResult> ChangeName([FromBody] string newName)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null) return Unauthorized();
+            var result = await _userService.ChangeName(userId.Value, newName);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

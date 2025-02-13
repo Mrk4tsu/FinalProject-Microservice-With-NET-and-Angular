@@ -1,6 +1,4 @@
 ﻿using FN.ViewModel.Helper.API;
-using FN.ViewModel.Helper.Device;
-using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
 using Microsoft.AspNetCore.Http;
 
@@ -15,5 +13,6 @@ namespace FN.Application.Systems.User
         Task<ApiResult<string>> RequestForgotPassword(string email);
         Task<ApiResult<bool>> ResetPassword(ForgotPasswordRequest request);
         Task<ApiResult<bool>> ChangePassword(ChangePasswordRequest request);
+        Task<ApiResult<bool>> ChangeName(int userId, string newName);
     }
 }

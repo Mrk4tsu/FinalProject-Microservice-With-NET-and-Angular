@@ -144,5 +144,15 @@ namespace FN.Application.Systems.User
             }
             return new ApiErrorResult<bool>("Thay đổi mật khẩu không thành công");
         }
+
+        public async Task<ApiResult<bool>> ChangeName(int userId, string newName)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if(user == null) return new ApiErrorResult<bool>("User không tồn tại");
+            user.FullName = newName;
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded) return new ApiSuccessResult<bool>();
+            return new ApiErrorResult<bool>("Thay đổi tên không thành công");
+        }
     }
 }

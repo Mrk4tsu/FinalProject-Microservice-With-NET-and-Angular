@@ -24,6 +24,11 @@ export class AuthService {
     this.loadUserFromToken();
   }
 
+  changeName(formData: any) {
+    const userId = this.getCurrentUser()?.userId;
+    return this.http.put(this.urlUser + '/change-name', {...formData, userId});
+  }
+
   changePassword(formData: any) {
     const userId = this.getCurrentUser()?.userId;
     return this.http.put(this.urlUser + '/change-password', {...formData, userId});
