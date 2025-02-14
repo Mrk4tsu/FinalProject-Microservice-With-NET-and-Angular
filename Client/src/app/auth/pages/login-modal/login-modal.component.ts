@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService, User} from '../../service/auth.service';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {ThemeService} from '../../../shared/services/theme.service';
 import {isPlatformBrowser} from '@angular/common';

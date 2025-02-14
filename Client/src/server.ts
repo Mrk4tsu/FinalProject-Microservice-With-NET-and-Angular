@@ -20,14 +20,17 @@ const angularApp = new AngularNodeAppEngine();
  *
  * Example:
  * ```ts
- * app.get('/api/**', (req, res) => {
- *   // Handle API request
+ * app.get('/api/hello', (req, res) => {
+ *   res.json({ message: 'Hello from Express!' });
  * });
  * ```
  */
 /**
  * Serve static files from /browser
  */
+app.get('/api/**', (req, res) => {
+  // Handle API request
+});
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',

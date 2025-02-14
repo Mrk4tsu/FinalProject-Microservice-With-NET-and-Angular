@@ -16,7 +16,6 @@ export class AuthService {
   private refreshTokenSubject = new BehaviorSubject<any>(null);
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
-  devices: UserDevice[] = [];
   urlAuth = environment.baseUrl + 'auth';
   urlUser = environment.baseUrl + 'user';
 

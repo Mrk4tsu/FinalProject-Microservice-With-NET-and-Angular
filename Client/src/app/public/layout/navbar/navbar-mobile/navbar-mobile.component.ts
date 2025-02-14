@@ -1,9 +1,10 @@
-import {Component, ElementRef, inject, PLATFORM_ID, Renderer2, ViewChild} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {ChangeDetectorRef, Component, ElementRef, inject, PLATFORM_ID, Renderer2, ViewChild} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {AuthService, User} from '../../../../auth/service/auth.service';
 
 @Component({
   selector: 'app-navbar-mobile',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './navbar-mobile.component.html',
   styleUrls: [
     './navbar-mobile.component.css',
@@ -16,9 +17,21 @@ export class NavbarMobileComponent {
   @ViewChild('overlay', {static: false}) overlay!: ElementRef;
   @ViewChild('closeSidebar', {static: false}) closeSidebar!: ElementRef;
   platform = inject(PLATFORM_ID);
+  user: User | null = new User();
   isBrowser = isPlatformBrowser(this.platform);
-  constructor(private renderer: Renderer2) {
+
+  constructor(private renderer: Renderer2,
+              public authService: AuthService,
+              private cdr: ChangeDetectorRef) {
   }
+
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+      this.cdr.detectChanges(); // Ensure the UI updates
+    });
+  }
+
   ngAfterViewInit(): void {
     if (this.menuToggle && this.sidebar && this.overlay) {
       this.renderer.listen(this.menuToggle.nativeElement, 'click', () => {
@@ -35,6 +48,10 @@ export class NavbarMobileComponent {
     } else {
       console.warn('Menu toggle, sidebar, or overlay elements are not found in the DOM.');
     }
+  }
+
+  onLogout(): void {
+    
   }
 
   toggleSidebar(isActive: boolean): void {

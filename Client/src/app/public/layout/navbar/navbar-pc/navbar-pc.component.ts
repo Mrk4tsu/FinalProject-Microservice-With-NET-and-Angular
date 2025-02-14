@@ -1,9 +1,20 @@
-import {Component, ElementRef, inject, PLATFORM_ID, Renderer2, ViewChild} from '@angular/core';
-import {isPlatformBrowser} from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject, OnInit,
+  PLATFORM_ID,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {AuthService, User} from '../../../../auth/service/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar-pc',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './navbar-pc.component.html',
   styleUrls: [
     './navbar-pc.component.css',
@@ -11,14 +22,18 @@ import {isPlatformBrowser} from '@angular/common';
     '../../public/public.component.css'
   ]
 })
-export class NavbarPcComponent {
+export class NavbarPcComponent implements AfterViewInit, OnInit {
   @ViewChild('searchIcon', {static: false}) searchIcon!: ElementRef;
   @ViewChild('searchForm', {static: false}) searchForm!: ElementRef;
   @ViewChild('menu', {static: false}) menu!: ElementRef;
   platform = inject(PLATFORM_ID);
   isBrowser = isPlatformBrowser(this.platform);
+  user: User | null = new User();
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2,
+              private cdr: ChangeDetectorRef,
+              private router: Router,
+              public authService: AuthService) {
   }
 
   ngAfterViewInit(): void {
@@ -30,6 +45,24 @@ export class NavbarPcComponent {
       } else {
         console.warn('Search icon (id: search-icon) not found in the DOM.');
       }
+    }
+  }
+
+  ngOnInit(): void {
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+      this.cdr.detectChanges(); // Ensure the UI updates
+    });
+  }
+  onLogout(): void {
+    const currentUrl = this.router.url;
+    this.authService.deleteToken();
+    this.authService.updateUser(new User());
+    this.cdr.detectChanges();
+    try {
+      this.router.navigateByUrl(currentUrl);
+    } catch {
+      this.router.navigateByUrl('/signin');
     }
   }
   toggleSearch(): void {

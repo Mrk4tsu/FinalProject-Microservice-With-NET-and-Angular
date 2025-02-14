@@ -16,11 +16,11 @@ const routes: Routes = [
     children: [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
-      {path: 'change-email', component: EmailChangeComponent, canActivate: [authGuard]},
-      {path: 'confirm-email', component: ConfirmEmailComponent, canActivate: [authGuard]},
-      {path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [authGuard]},
-      {path: 'confirm-password', component: ConfirmPasswordComponent, canActivate: [authGuard]},
-      {path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard]}
+      // {path: 'change-email', component: EmailChangeComponent, canActivate: [authGuard]},
+      // {path: 'confirm-email', component: ConfirmEmailComponent, canActivate: [authGuard]},
+      // {path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [authGuard]},
+      // {path: 'confirm-password', component: ConfirmPasswordComponent, canActivate: [authGuard]},
+      // {path: 'change-password', component: ChangePasswordComponent, canActivate: [authGuard]}
     ]
   },
 ];
