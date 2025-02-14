@@ -1,11 +1,102 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component, inject, PLATFORM_ID} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {User} from '../../../shared/models/user';
+import {AuthService} from '../../services/auth.service';
+import {Router} from '@angular/router';
+import {ThemeService} from '../../../shared/services/theme.service';
+import {ToastrService} from 'ngx-toastr';
+import {isPlatformBrowser} from '@angular/common';
 
 @Component({
   selector: 'app-login-modal',
-  imports: [],
+  imports: [
+    ReactiveFormsModule
+  ],
   templateUrl: './login-modal.component.html',
-  styleUrl: './login-modal.component.css'
+  styleUrls: [
+    './login-modal.component.css',
+    '../../layout/auth/auth.component.css'
+  ]
 })
 export class LoginModalComponent {
+  isSubmitted: boolean = false;
+  isLoading: boolean = false;
+  user: User | null = null;
 
+  constructor(
+    public formBuilder: FormBuilder,
+    private service: AuthService,
+    private router: Router,
+    private themeService: ThemeService,
+    private cdr: ChangeDetectorRef,
+    private toast: ToastrService) {
+  }
+
+  form = this.formBuilder.group({
+    userName: ['', Validators.required],
+    password: ['', Validators.required],
+    rememberMe: [false]
+  })
+
+  ngOnInit() {
+    this.themeService.theme$.subscribe(theme => {
+      document.body.className = theme;
+      this.cdr.detectChanges();
+    });
+    this.togglePasswordVisibility();
+  }
+
+  hasDisplayErrors(controlName: string): Boolean {
+    const control = this.form.get(controlName);
+    return Boolean(control?.invalid) && (this.isSubmitted || Boolean(control?.touched) || Boolean(control?.dirty));
+  }
+
+  onLogin() {
+    this.isSubmitted = true;
+    if (this.form.valid) {
+      this.isLoading = true;
+      this.service.login(this.form.value).subscribe({
+        next: (res) => {
+          if (!res.success) {
+            this.isLoading = false;
+            this.toast.error(res.message);
+          } else {
+            this.isLoading = false;
+            this.toast.success('Login successful');
+            this.router.navigate(['/']).then(r => r);
+          }
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.toast.error(err.error.message);
+        },
+      });
+    }
+  }
+
+  togglePasswordVisibility() {
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password') as HTMLInputElement;
+    const modalElement = document.getElementById('loginModal');
+
+    if (modalElement) {
+      modalElement.addEventListener('hide.bs.modal', () => {
+        this.form.reset();
+        this.isSubmitted = false;
+      });
+    }
+
+    if (togglePassword) {
+      togglePassword.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Toggle the type attribute
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+
+        // Toggle the icon
+        togglePassword.textContent = type === 'password' ? 'Hiển thị' : 'Ẩn đi';
+      });
+
+    }
+  }
 }
