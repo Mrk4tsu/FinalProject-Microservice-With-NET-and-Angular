@@ -16,6 +16,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
   private refreshTokenSubject = new BehaviorSubject<any>(null);
+  flatForm = inject(PLATFORM_ID);
 
   constructor(private http: HttpClient,
               private router: Router,
@@ -40,7 +41,9 @@ export class AuthService {
   }
 
   login(formData: any) {
-    const userAgent = navigator.userAgent;
+    const userAgent = isPlatformBrowser(this.flatForm)
+      ? navigator.userAgent
+      : 'Server';
     const clientId = this.getClientId();
     return this.http.post(this.urlAuth + '/login', {...formData, clientId, userAgent}).pipe(
       tap((res: any) => {
@@ -102,7 +105,7 @@ export class AuthService {
 
         this.updateUser(null);
         this.router.navigateByUrl(currentUrl).then(() => {
-          window.location.reload();
+          this.reloadWindow();
         });
       },
       error: (err) => {
@@ -111,11 +114,10 @@ export class AuthService {
         this.updateUser(null);
 
         this.router.navigateByUrl(currentUrl).then(() => {
-          window.location.reload();
+          this.reloadWindow();
         });
       }
     });
-    window.location.reload();
   }
 
   saveToken(accessToken: string, refreshToken: string, clientId: string, refreshTokenExpiry: string) {
@@ -179,5 +181,9 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+  reloadWindow() {
+    if (isPlatformBrowser(this.flatForm))
+      window.location.reload();
   }
 }

@@ -1,8 +1,8 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, ValidatorFn, Validators} from '@angular/forms';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {CommonModule} from '@angular/common';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {FirstkeyPipe} from '../../services/helper/firstkey.pipe';
 import {ThemeService} from '../../../shared/services/theme.service';
 
@@ -27,7 +27,7 @@ export class ConfirmPasswordComponent implements OnInit {
   isLoading: boolean = false;
   isSubmitted: boolean = false;
   countdown: number = 0;
-
+  platForm = inject(PLATFORM_ID);
   form = this.fb.group({
     newPassword: ['', [Validators.required, Validators.minLength(6)]],
     confirmNewPassword: ['', [Validators.required]]
@@ -41,10 +41,12 @@ export class ConfirmPasswordComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
-      document.body.className = theme;
-      this.cdr.detectChanges();
-    });
+    if (isPlatformBrowser(this.platForm)) {
+      this.themeService.theme$.subscribe(theme => {
+        document.body.className = theme;
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   passwordMatchValidator(): ValidatorFn {

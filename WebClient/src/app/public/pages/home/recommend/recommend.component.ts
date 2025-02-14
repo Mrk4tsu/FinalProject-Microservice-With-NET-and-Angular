@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import Swiper from 'swiper';
 import {Autoplay, Navigation, Pagination} from 'swiper/modules';
+import {isPlatformBrowser} from '@angular/common';
 
 @Component({
   selector: 'app-recommend',
@@ -9,9 +10,12 @@ import {Autoplay, Navigation, Pagination} from 'swiper/modules';
   styleUrl: './recommend.component.css'
 })
 export class RecommendComponent implements OnInit {
+  platforms = inject(PLATFORM_ID);
 
   ngOnInit() {
-    this.initSwiper();
+    if (isPlatformBrowser(this.platforms)) {
+      this.initSwiper();
+    }
   }
 
   initSwiper() {

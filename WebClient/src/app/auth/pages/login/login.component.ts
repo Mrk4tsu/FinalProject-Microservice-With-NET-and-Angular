@@ -22,6 +22,7 @@ import {Router, RouterLink} from '@angular/router';
 export class LoginComponent {
   isSubmitted: boolean = false;
   isLoading: boolean = false;
+  platForm = inject(PLATFORM_ID);
 
   constructor(private toast: ToastrService,
               private service: AuthService,
@@ -39,10 +40,12 @@ export class LoginComponent {
   })
 
   ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
-      document.body.className = theme;
-      this.cdr.detectChanges();
-    });
+    if (isPlatformBrowser(this.platForm)) {
+      this.themeService.theme$.subscribe(theme => {
+        document.body.className = theme;
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   hasDisplayErrors(controlName: string): Boolean {

@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, PLATFORM_ID} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../services/auth.service';
-import {CommonModule} from '@angular/common';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {ThemeService} from '../../../shared/services/theme.service';
 
@@ -26,6 +26,7 @@ export class ForgotPasswordComponent {
   message = '';
   isLoading: boolean = false;
   isSubmitted: boolean = false;
+  platForm = inject(PLATFORM_ID);
 
   constructor(
     private fb: FormBuilder,
@@ -35,10 +36,12 @@ export class ForgotPasswordComponent {
   }
 
   ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
-      document.body.className = theme;
-      this.cdr.detectChanges();
-    });
+    if (isPlatformBrowser(this.platForm)) {
+      this.themeService.theme$.subscribe(theme => {
+        document.body.className = theme;
+        this.cdr.detectChanges();
+      });
+    }
   }
 
   hasDisplayError(controlName: string): Boolean {

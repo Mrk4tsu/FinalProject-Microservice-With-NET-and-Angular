@@ -10,12 +10,12 @@
          style="max-width: 100px; height: auto" alt="Mrkatsu Logo">
   </a>
 
-  <a href="javascript:void(0)" *ngIf="!user?.avatar"
+  <a href="javascript:void(0)" *ngIf="this.isBrowser && !user?.avatar"
      class="text-decoration-none bg-success-25 menu-icon border-0"
      data-bs-target="#loginModal" data-bs-toggle="modal">
     <span class="material-symbols-rounded text-tian-light">account_circle</span>
   </a>
-  <div class="dropdown" *ngIf="user && authService.getAccessToken()">
+  <div class="dropdown" *ngIf="this.isBrowser && user && authService.getAccessToken()">
     <a href="javascript:void(0)" data-bs-toggle="dropdown">
       <img [src]="user.avatar" class="rounded-circle px-2" style="width: 47px;" alt="Avatar"/>
     </a>

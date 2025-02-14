@@ -2,12 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
-  OnInit,
+  ElementRef, inject,
+  OnInit, PLATFORM_ID,
   Renderer2,
   ViewChild
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {User} from '../../../../shared/models/user';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../../auth/services/auth.service';
@@ -27,6 +27,8 @@ export class NavbarPcComponent implements AfterViewInit, OnInit {
   @ViewChild('searchForm', {static: false}) searchForm!: ElementRef;
   @ViewChild('menu', {static: false}) menu!: ElementRef;
   user: User | null = new User();
+  platForm = inject(PLATFORM_ID);
+  isBrowser = isPlatformBrowser(this.platForm);
 
   constructor(private renderer: Renderer2,
               private cdr: ChangeDetectorRef,
@@ -35,20 +37,24 @@ export class NavbarPcComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.searchIcon) {
-      this.renderer.listen(this.searchIcon.nativeElement, 'click', () => {
-        this.toggleSearch();
-      });
-    } else {
-      console.warn('Search icon (id: search-icon) not found in the DOM.');
+    if (this.isBrowser) {
+      if (this.searchIcon) {
+        this.renderer.listen(this.searchIcon.nativeElement, 'click', () => {
+          this.toggleSearch();
+        });
+      } else {
+        console.warn('Search icon (id: search-icon) not found in the DOM.');
+      }
     }
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-      this.cdr.detectChanges(); // Ensure the UI updates
-    });
+    if (isPlatformBrowser(this.platForm)) {
+      this.authService.user$.subscribe(user => {
+        this.user = user;
+        this.cdr.detectChanges(); // Ensure the UI updates
+      });
+    }
   }
 
   onLogout(): void {
@@ -59,7 +65,6 @@ export class NavbarPcComponent implements AfterViewInit, OnInit {
     if (this.searchForm && this.menu) {
       const isActive = this.searchForm.nativeElement.classList.toggle('active');
 
-      // Thay đổi CSS của menu
       const menuStyle = isActive ? 'none' : 'flex';
       this.renderer.setStyle(this.menu.nativeElement, 'display', menuStyle);
 

@@ -24,6 +24,7 @@ export class LoginModalComponent implements OnInit, AfterViewInit {
   isSubmitted: boolean = false;
   isLoading: boolean = false;
   user: User | null = null;
+  platForm = inject(PLATFORM_ID);
 
   constructor(
     public formBuilder: FormBuilder,
@@ -45,11 +46,13 @@ export class LoginModalComponent implements OnInit, AfterViewInit {
   })
 
   ngOnInit() {
-    this.themeService.theme$.subscribe(theme => {
-      document.body.className = theme;
-      this.cdr.detectChanges();
-    });
-    this.togglePasswordVisibility();
+    if (isPlatformBrowser(this.platForm)) {
+      this.themeService.theme$.subscribe(theme => {
+        document.body.className = theme;
+        this.cdr.detectChanges();
+      });
+      this.togglePasswordVisibility();
+    }
   }
 
   hasDisplayErrors(controlName: string): Boolean {
@@ -58,6 +61,7 @@ export class LoginModalComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
+
     const currentUrl = this.router.url;
     this.isSubmitted = true;
     if (this.form.valid) {
@@ -69,11 +73,12 @@ export class LoginModalComponent implements OnInit, AfterViewInit {
           const {accessToken, refreshToken, clientId, refreshTokenExpiry} = res.data;
           this.service.saveToken(accessToken, refreshToken, clientId, refreshTokenExpiry);
           this.toast.success('Login successful', 'Success');
-
-          const modalElement = document.getElementById('loginModal');
-          if (modalElement) {
-            const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-            modalInstance.hide();
+          if (isPlatformBrowser(this.platForm)) {
+            const modalElement = document.getElementById('loginModal');
+            if (modalElement) {
+              const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+              modalInstance.hide();
+            }
           }
 
           this.form.reset();
