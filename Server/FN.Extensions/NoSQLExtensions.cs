@@ -1,4 +1,4 @@
-﻿using FN.Application.System.Redis;
+﻿using FN.Application.Systems.Redis;
 using FN.Utilities;
 using FN.ViewModel.Helper;
 using Microsoft.Extensions.Configuration;

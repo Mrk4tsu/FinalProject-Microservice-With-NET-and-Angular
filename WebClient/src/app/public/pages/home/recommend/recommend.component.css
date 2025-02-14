@@ -1,0 +1,126 @@
+.bg-soft {
+  background-color: rgb(42, 64, 85) !important;
+}
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide .card {
+  width: 100%;
+  height: 250px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: url('/assets/public/images/background/bg-item.png');
+  background-size: cover;
+}
+
+.swiper-slide .card img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -65%); /* Căn chữ vào giữa vùng */
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 15px;
+  z-index: 10;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng mượt */
+}
+
+.swiper-slide .card:hover img {
+  transform: translate(-50%, -70%);
+}
+
+.swiper-slide .card-body {
+  padding: 10px;
+  text-align: center;
+  background-color: var(--background-soft);
+  height: 85%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 1;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+
+.swiper-slide .card .circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+
+.swiper-slide .card:hover .circle-primary,
+.swiper-slide .card:hover .circle-danger,
+.swiper-slide .card:hover .circle-warning,
+.swiper-slide .card:hover .circle-success {
+  transform: scale(1.2); /* Tăng kích thước lên 10% */
+}
+
+.circle-primary {
+  background-color: rgb(0, 233, 255, 0.70);
+}
+
+.circle-danger {
+  background-color: rgb(235, 48, 48, 0.70);
+}
+
+.circle-warning {
+  background-color: rgb(255, 194, 0, 0.70);
+}
+
+.circle-success {
+  background-color: rgb(148, 255, 0, 0.70);
+}
+
+.swiper-slide .card-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  z-index: 2;
+  color: var(--text-color);
+}
+
+.swiper-slide .card-text {
+  font-size: 0.875rem;
+  z-index: 2;
+  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 5%);
+  width: 100%;
+}
+
+.swiper-slide .card-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.swiper-slide .card-text p {
+  color: var(--color-tian);
+}
+
+.swiper-slide .badge {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 0.5rem;
+  font-weight: 600;
+  border-radius: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
