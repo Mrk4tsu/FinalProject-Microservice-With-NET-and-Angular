@@ -1,6 +1,5 @@
-﻿using FN.Application.Systems.Redis;
-using FN.Application.Systems.User;
-using FN.Utilities;
+﻿using FN.Application.System.User;
+using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,87 +11,64 @@ namespace FN.UserService.Controllers
     public class UsersController : BasesController
     {
         private readonly IUserService _userService;
-        private readonly IRedisService _redisService;
-        public UsersController(IUserService userService, IRedisService redisService)
+        public UsersController(IUserService userService)
         {
-            _redisService = redisService;
             _userService = userService;
         }
-        [HttpGet, AllowAnonymous]
-        public async Task<IActionResult> Get(int userId)
+        [HttpPost("register"), AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterDTO register)
         {
-            var result = await _userService.GetById(userId);
+            var result = await _userService.Register(register);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        [HttpPost("login"), AllowAnonymous]
+        public async Task<IActionResult> Login(LoginDTO login)
+        {
+            var result = await _userService.Authenticate(login);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpGet("devices")]
+        public async Task<IActionResult> ListDevice()
         {
             var userId = GetUserIdFromClaims();
             if (userId == null) return Unauthorized();
-            request.UserId = userId.Value;
-            var result = await _userService.ChangePassword(request);
+            var result = await _userService.GetRegisteredDevices(userId.Value);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPost("request-forgot"), AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(string username)
-        {
-            var result = await _userService.RequestForgotPassword(username);
-            if (result.Success)
-                return Ok(result);
-            return BadRequest(result);
-        }
-        [HttpPost("reset-password"), AllowAnonymous]
-        public async Task<IActionResult> ResetPassword(ForgotPasswordRequest request)
-        {
-            var result = await _userService.ResetPassword(request);
-            if (result.Success)
-                return Ok(result);
-            return BadRequest(result);
-        }
-        [HttpPost("confirm-email"), AllowAnonymous]
-        public async Task<IActionResult> ConfirmEmailChange(UpdateEmailResponse response)
-        {
-            var result = await _userService.ConfirmEmailChange(response);
-            if (result.Success)
-                return Ok(result);
-            return BadRequest(result);
-        }
-        [HttpPost("request-email")]
-        public async Task<IActionResult> RequestUpdateMail(string newEmail)
+        [HttpPost("revoke-device")]
+        public async Task<IActionResult> RevokeDevice(string clientId)
         {
             var userId = GetUserIdFromClaims();
             if (userId == null) return Unauthorized();
-            var requestResult = await _userService.RequestUpdateMail(userId.Value, newEmail);
-            await _redisService.Publish(SystemConstant.MESSAGE_UPDATE_EMAIL_EVENT, new UpdateEmailResponse
+
+            var request = new TokenRequest
             {
                 UserId = userId.Value,
-                NewEmail = newEmail,
-                Token = requestResult.Data!
-            });
-            if (!requestResult.Success)
-                return BadRequest(requestResult);
-            return Ok(requestResult);
-        }
-        [HttpPut("avatar")]
-        public async Task<IActionResult> UpdateAvatar(IFormFile file)
-        {
-            var userId = GetUserIdFromClaims();
-            if (userId == null) return Unauthorized();
-            var result = await _userService.UpdateAvatar(userId.Value, file);
+                ClientId = clientId
+            };
+            var result = await _userService.RevokeDevice(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);
         }
-        [HttpPut("change-name")]
-        public async Task<IActionResult> ChangeName([FromBody] string newName)
+        [HttpPost("refresh-token"), AllowAnonymous]
+        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
         {
-            var userId = GetUserIdFromClaims();
-            if (userId == null) return Unauthorized();
-            var result = await _userService.ChangeName(userId.Value, newName);
+            var result = await _userService.RefreshToken(request);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result);
+        }
+        [HttpPost("logout"), AllowAnonymous]
+        public async Task<IActionResult> Logout(TokenRequest request)
+        {
+            var result = await _userService.RevokeDevice(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

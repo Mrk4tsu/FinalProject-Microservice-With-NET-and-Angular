@@ -1,9 +1,10 @@
 ﻿using FN.Application.Helper.Mail;
-using FN.Application.Systems.Redis;
+using FN.Application.System.Redis;
 using FN.Utilities;
+using FN.ViewModel.Helper;
 using FN.ViewModel.Systems.User;
 using Newtonsoft.Json.Linq;
-using System.Net;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Text.Json;
 
 namespace FN.EmailService
@@ -13,13 +14,11 @@ namespace FN.EmailService
         private readonly IMailService _mailService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IRedisService _redisService;
-        private readonly IConfiguration _configuration;
-        public MailSubscriber(IMailService mailService, IServiceProvider serviceProvider, IRedisService redisService, IConfiguration configuration)
+        public MailSubscriber(IMailService mailService, IServiceProvider serviceProvider, IRedisService redisService)
         {
             _mailService = mailService;
             _serviceProvider = serviceProvider;
             _redisService = redisService;
-            _configuration = configuration;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -27,11 +26,10 @@ namespace FN.EmailService
             {
                 using var scope = _serviceProvider.CreateScope();
                 var emailService = scope.ServiceProvider.GetRequiredService<IMailService>();
-                var baseDomain = _configuration["BaseDomain"];
                 switch ((string)channel!)
                 {
                     case SystemConstant.MESSAGE_REGISTER_EVENT:
-                        var user = JsonSerializer.Deserialize<RegisterResponse>(message!);
+                        var user = JsonSerializer.Deserialize<RegisterResponse>(message!);                       
                         var vars = new Dictionary<string, object>()
                         {
                             {"pusername", user?.FullName!}
@@ -50,28 +48,7 @@ namespace FN.EmailService
                             {"pip", userLogin.DeviceInfo.IPAddress}
                         };
                         await _mailService.SendMail(userLogin!.Email, $"Cảnh báo bảo mật cho {userLogin.Username}", SystemConstant.TEMPLATE_WARNING_ID, variables);
-                        break;
-                    case SystemConstant.MESSAGE_UPDATE_EMAIL_EVENT:
-                        var req = JsonSerializer.Deserialize<UpdateEmailResponse>(message!);
 
-                        var link = UrlCallback(req!.UserId, req.NewEmail, req.Token, baseDomain ?? "https://mrkatsu.io.vn");
-                        var obj = new JObject
-                        {
-                            {"plink", link}
-                        };
-                        await _mailService.SendMail(req!.NewEmail, $"Xác nhận thay đổi email", SystemConstant.TEMPLATE_UPDATE_MAIL_ID, obj);
-                        break;
-                    case SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT:
-                        var request = JsonSerializer.Deserialize<ForgotPasswordResponse>(message!);
-                        if (request != null)
-                        {
-                            var url = UrlCallback(request.Token, request.Username, baseDomain ?? "https://mrkatsu.io.vn");
-                            var objects = new JObject
-                            {
-                                {"plink", url}
-                            };
-                            await _mailService.SendMail(request.Email, $"Xác nhận khôi phục mật khẩu", SystemConstant.TEMPLATE_RESET_PASSWORD_ID, objects);
-                        }
                         break;
                     default:
                         break;
@@ -82,16 +59,6 @@ namespace FN.EmailService
             {
                 await Task.Delay(1000, stoppingToken);
             }
-        }
-        private string UrlCallback(int userId, string token, string domain, string? newEmail = null)
-        {
-            var encodedToken = WebUtility.UrlEncode(token);
-            return $"{domain}/confirm-email?userId={userId}&newEmail={newEmail}&token={encodedToken}";
-        }
-        private string UrlCallback(string token, string username, string domain)
-        {
-            var encodedToken = WebUtility.UrlEncode(token);
-            return $"{domain}/confirm-password?username={username}&token={encodedToken}";
         }
     }
 }
