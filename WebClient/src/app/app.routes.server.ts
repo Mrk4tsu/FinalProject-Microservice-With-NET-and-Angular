@@ -1,6 +1,4 @@
-import {PrerenderFallback, RenderMode, ServerRoute} from '@angular/ssr';
-import {inject} from '@angular/core';
-import {PostService} from './service/post.service';
+import {RenderMode, ServerRoute} from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
   {
@@ -13,6 +11,10 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'register',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path:'**',
     renderMode: RenderMode.Client,
   }
   // {

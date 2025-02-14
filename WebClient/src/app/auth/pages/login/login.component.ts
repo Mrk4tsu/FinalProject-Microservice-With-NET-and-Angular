@@ -2,15 +2,22 @@ import {ChangeDetectorRef, Component, inject, PLATFORM_ID} from '@angular/core';
 import {ToastrService} from 'ngx-toastr';
 import {AuthService} from '../../services/auth.service';
 import {ThemeService} from '../../../shared/services/theme.service';
-import {FormBuilder, Validators} from '@angular/forms';
-import {isPlatformBrowser} from '@angular/common';
-import {Router} from '@angular/router';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    CommonModule
+  ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: [
+    './login.component.css',
+    '../../layout/auth/auth.component.css'
+  ]
 })
 export class LoginComponent {
   isSubmitted: boolean = false;

@@ -52,15 +52,7 @@ export class NavbarPcComponent implements AfterViewInit, OnInit {
   }
 
   onLogout(): void {
-    const currentUrl = this.router.url;
-    this.authService.deleteToken();
-    this.authService.updateUser(new User());
-    this.cdr.detectChanges();
-    try {
-      this.router.navigateByUrl(currentUrl);
-    } catch {
-      this.router.navigateByUrl('/signin');
-    }
+    this.authService.logOut();
   }
 
   toggleSearch(): void {

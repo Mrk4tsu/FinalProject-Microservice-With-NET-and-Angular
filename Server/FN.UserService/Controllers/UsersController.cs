@@ -38,9 +38,9 @@ namespace FN.UserService.Controllers
             return BadRequest(result);
         }
         [HttpPost("request-forgot"), AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword(string username)
+        public async Task<IActionResult> ForgotPassword(RequestForgot request)
         {
-            var result = await _userService.RequestForgotPassword(username);
+            var result = await _userService.RequestForgotPassword(request);
             if (result.Success)
                 return Ok(result);
             return BadRequest(result);

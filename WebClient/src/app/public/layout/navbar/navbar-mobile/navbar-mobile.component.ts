@@ -10,6 +10,7 @@ import {
 import {AuthService} from '../../../../auth/services/auth.service';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {User} from '../../../../shared/models/user';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar-mobile',
@@ -29,6 +30,7 @@ export class NavbarMobileComponent implements OnInit, AfterViewInit {
 
   constructor(private renderer: Renderer2,
               public authService: AuthService,
+              private router: Router,
               private cdr: ChangeDetectorRef) {
   }
 
@@ -58,7 +60,7 @@ export class NavbarMobileComponent implements OnInit, AfterViewInit {
   }
 
   onLogout(): void {
-
+    this.authService.logOut();
   }
 
   toggleSidebar(isActive: boolean): void {

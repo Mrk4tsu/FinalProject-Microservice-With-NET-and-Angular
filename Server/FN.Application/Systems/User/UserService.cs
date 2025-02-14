@@ -105,10 +105,11 @@ namespace FN.Application.Systems.User
             return new ApiErrorResult<bool>("Cập nhật ảnh đại diện không thành công");
         }
 
-        public async Task<ApiResult<string>> RequestForgotPassword(string username)
+        public async Task<ApiResult<string>> RequestForgotPassword(RequestForgot request)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(request.Username);
             if (user == null) return new ApiErrorResult<string>("User không tồn tại");
+            if(request.Email != user.Email) return new ApiErrorResult<string>("Email yêu cầu khôi phục không chính xác");
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             await _redisService.Publish(SystemConstant.MESSAGE_FORGOT_PASSWORD_EVENT, new ForgotPasswordResponse
             {
@@ -126,8 +127,11 @@ namespace FN.Application.Systems.User
             var decodedToken = WebUtility.UrlDecode(request.Token);
             var result = await _userManager.ResetPasswordAsync(user, decodedToken, request.NewPassword);
             if (result.Succeeded)
+            {
+                await _authService.RemoveAllDevice(user.Id);
                 return new ApiSuccessResult<bool>();
-            return new ApiErrorResult<bool>("Khôi phục mật khẩu không thành công");
+            }
+            return new ApiErrorResult<bool>(result.Errors.First().Description);
         }
 
         public async Task<ApiResult<bool>> ChangePassword(ChangePasswordRequest request)
@@ -142,7 +146,7 @@ namespace FN.Application.Systems.User
                     await _authService.RemoveAllDevice(request.UserId);
                 return new ApiSuccessResult<bool>();
             }
-            return new ApiErrorResult<bool>("Thay đổi mật khẩu không thành công");
+            return new ApiErrorResult<bool>(result.Errors.First().Description);
         }
 
         public async Task<ApiResult<bool>> ChangeName(int userId, string newName)
