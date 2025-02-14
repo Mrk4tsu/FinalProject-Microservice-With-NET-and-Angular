@@ -35,6 +35,10 @@ namespace FN.Extensions
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
             });
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromMinutes(15);
+            });
             return services;
         }
         public static IServiceCollection AddIdentityAuth(this IServiceCollection services, IConfiguration config)

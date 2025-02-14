@@ -1,0 +1,56 @@
+.main-container {
+  scroll-behavior: smooth;
+  font-family: 'Quicksand', sans-serif;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  height: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: var(--text-color) !important;
+  position: relative;
+}
+
+.layer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--background-color);
+  background-image: var(--background-layer);
+  background-size: cover;
+  background-position: center;
+}
+
+main {
+  flex-grow: 1;
+}
+
+.change-theme {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+}
+
+.change-theme button {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+}
+
+input {
+  border: 1px solid #6c757d !important;
+}
+
+input::placeholder {
+  color: #818181 !important;
+}
+
+.text-small {
+  font-size: 0.8rem !important;
+}
