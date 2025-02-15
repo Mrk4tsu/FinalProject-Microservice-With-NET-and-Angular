@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Ocelot.Middleware;
 
 namespace FN.Extensions
 {
@@ -46,5 +48,25 @@ namespace FN.Extensions
             });
             return app;
         }
+        public static IApplicationBuilder ConfigureOcelot(this IApplicationBuilder app, IConfiguration config)
+        {
+            var env = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
+            Console.WriteLine(env.EnvironmentName);
+            var ocelotConfigFile = $"ocelot.{env.EnvironmentName}.json";
+
+            if (!File.Exists(ocelotConfigFile))
+            {
+                throw new FileNotFoundException($"Ocelot configuration file '{ocelotConfigFile}' not found.");
+            }
+            var ocelotConfig = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(ocelotConfigFile, optional: false, reloadOnChange: true)
+                .Build();
+
+            app.UseOcelot().Wait();
+
+            return app;
+        }
+
     }
 }
