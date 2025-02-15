@@ -8,14 +8,16 @@ import {ConfirmPasswordComponent} from './pages/confirm-password/confirm-passwor
 
 const routes: Routes = [
   {
-    path: '', component: AuthComponent,
+    path: '',
+    component: AuthComponent,
     children: [
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'forgot-password', component: ForgotPasswordComponent},
       {path: 'confirm-password', component: ConfirmPasswordComponent},
+      {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]
-  },
+  }
 ];
 
 @NgModule({
