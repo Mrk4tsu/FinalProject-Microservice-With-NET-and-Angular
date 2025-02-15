@@ -1,17 +1,30 @@
 import {Routes} from '@angular/router';
-import {PublicComponent} from './public/layout/public/public.component';
-import {AuthComponent} from './auth/layout/auth/auth.component';
+import {ContactComponent} from './contact/contact.component';
+import {ProductComponent} from './product/product.component';
+import {HomeComponent} from './public/pages/home/home.component';
+import {AuthComponent} from './auth/auth.component';
+import {LoginComponent} from './auth/pages/login/login.component';
+import {TestComponent} from './test/test/test.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: PublicComponent,
-    loadChildren: () => import('./public/public.module').then(m => m.PublicModule)
+    children: [
+      {path: '', component: HomeComponent}
+    ]
   },
   {
     path: '',
     component: AuthComponent,
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    children: [
+      {path: 'login', component: LoginComponent},
+    ]
   },
-  { path: '**', redirectTo: '/' }
+  {
+    path: '',
+    component: TestComponent,
+    loadChildren: () => import('./test/test.module').then(m => m.TestModule)
+  },
+  {path: 'contact', component: ContactComponent},
+  {path: 'product/:id', component: ProductComponent},
 ];

@@ -1,13 +1,13 @@
+import {isPlatformBrowser} from '@angular/common';
 import {inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {jwtDecode} from 'jwt-decode';
+import {User} from '../models/user.class';
 import {BehaviorSubject, catchError, filter, Observable, switchMap, take, tap, throwError} from 'rxjs';
-import {User} from '../../shared/models/user';
 import {HttpClient} from '@angular/common/http';
+import {Router} from '@angular/router';
 import {CookieService} from 'ngx-cookie-service';
 import {environment} from '../../../environments/environment';
-import {isPlatformBrowser} from '@angular/common';
-import {jwtDecode} from 'jwt-decode';
-import {ACCESS_TOKEN_KEY, CLIENT_ID_KEY, REFRESH_TOKEN_KEY} from '../../shared/constant';
-import {Router} from '@angular/router';
+import {ACCESS_TOKEN_KEY, CLIENT_ID_KEY, REFRESH_TOKEN_KEY} from '../../shared/helper/constant';
 
 @Injectable({
   providedIn: 'root'
@@ -182,6 +182,7 @@ export class AuthService {
       return null;
     }
   }
+
   reloadWindow() {
     if (isPlatformBrowser(this.flatForm))
       window.location.reload();

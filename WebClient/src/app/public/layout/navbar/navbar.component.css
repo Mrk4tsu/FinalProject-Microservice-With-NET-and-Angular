@@ -69,15 +69,18 @@
   border-left: 5px solid #2dce89;
   border-right: 5px solid #2dce89;
 }
+
 .bg-success-25 {
   background-color: rgb(45, 206, 137, 0.25) !important;
 }
+
 /*PC*/
 @media (min-width: 1025px) {
   .navbar-mobile {
     display: none;
   }
 }
+
 /*Tablet*/
 @media (max-width: 1024px) {
   .navbar-pc {
@@ -87,11 +90,13 @@
   .navbar-mobile {
     display: flex;
   }
-  .sidebar{
+
+  .sidebar {
     left: -45rem;
     width: 50%;
   }
 }
+
 /*Mobile*/
 @media (max-width: 767px) {
   .sidebar {

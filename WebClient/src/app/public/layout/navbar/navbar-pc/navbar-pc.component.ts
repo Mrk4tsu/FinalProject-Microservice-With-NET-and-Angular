@@ -2,13 +2,15 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef, inject,
-  OnInit, PLATFORM_ID,
+  ElementRef,
+  inject,
+  OnInit,
+  PLATFORM_ID,
   Renderer2,
   ViewChild
 } from '@angular/core';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
-import {User} from '../../../../shared/models/user';
+import {User} from '../../../../auth/models/user.class';
 import {Router} from '@angular/router';
 import {AuthService} from '../../../../auth/services/auth.service';
 
@@ -19,7 +21,7 @@ import {AuthService} from '../../../../auth/services/auth.service';
   styleUrls: [
     './navbar-pc.component.css',
     '../navbar.component.css',
-    '../../public/public.component.css'
+    '../../../public.component.css'
   ]
 })
 export class NavbarPcComponent implements AfterViewInit, OnInit {

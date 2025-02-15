@@ -1,0 +1,25 @@
+<div class="main-container">
+  <div class="change-theme">
+    <button (click)="changeTheme()" class="d-sm-none d-lg-flex menu-lg-icon bg-tian-dark border-0">
+      <span class="material-symbols-rounded">
+        {{ (themeService.theme$ | async) === 'dark-theme' ? 'dark_mode' : 'light_mode' }}
+      </span>
+    </button>
+  </div>
+  <button aria-label (click)="changeTheme()" style="left: 10px; bottom: 10px"
+          class="d-lg-none d-sm-flex position-fixed fixed-bottom menu-lg-icon bg-tian-dark border-0">
+    <span class="material-symbols-rounded">
+      {{ (themeService.theme$ | async) === 'dark-theme' ? 'dark_mode' : 'light_mode' }}
+    </span>
+  </button>
+  <div class="layer">
+    <app-navbar/>
+    <main>
+      <div class="my-3 py-3">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+    <app-footer/>
+  </div>
+<!--  <app-login-modal/>-->
+</div>

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "WebClient": {
+    "AngularServer": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -38,7 +38,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/web-client",
+            "outputPath": "dist/angular-server",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -49,14 +49,9 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ngx-toastr/toastr.css",
-              "node_modules/swiper/swiper-bundle.css",
               "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ],
+            "scripts": [],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -77,18 +72,7 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all",
-              "sourceMap": false,
-              "optimization": {
-                "scripts": true,
-                "styles": {
-                  "minify": true,
-                  "inlineCritical": false
-                }
-              },
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true
+              "outputHashing": "all"
             },
             "development": {
               "optimization": false,
@@ -108,10 +92,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "WebClient:build:production"
+              "buildTarget": "AngularServer:build:production"
             },
             "development": {
-              "buildTarget": "WebClient:build:development"
+              "buildTarget": "AngularServer:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -131,14 +115,9 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ngx-toastr/toastr.css",
-              "node_modules/swiper/swiper-bundle.css",
               "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            "scripts": []
           }
         }
       }

@@ -1,8 +1,8 @@
 import {inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {CookieService} from 'ngx-cookie-service';
-import {THEME} from '../constant';
 import {isPlatformBrowser} from '@angular/common';
+import {THEME} from '../helper/constant';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,7 @@ export class ThemeService {
   private themeSubject = new BehaviorSubject<string>('light-theme');
   theme$ = this.themeSubject.asObservable();
   platForm = inject(PLATFORM_ID);
+
   constructor(private cookieService: CookieService) {
     if (isPlatformBrowser(this.platForm)) {
       this.load()
