@@ -37,7 +37,7 @@
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mx-lg-5 px-lg-5 auths-width auths-form ">
           <div class="my-2">
             <label class="form-label" for="usn">Username</label>
-            <input type="text" class="form-control text-white" id="usn" placeholder="Nhập tên đăng nhập"
+            <input type="text" class="form-control bg-soft-screen" id="usn" placeholder="Nhập tên đăng nhập"
                    formControlName="userName">
             @if (hasDisplayError('userName') && form.controls.userName.hasError('required')) {
               <div class="error-feedback">
@@ -47,7 +47,7 @@
           </div>
           <div class="my-2">
             <label class="form-label" for="pw">Password</label>
-            <input type="password" class="form-control text-white" id="pw" placeholder="Nhập mật khẩu"
+            <input type="password" class="form-control bg-soft-screen" id="pw" placeholder="Nhập mật khẩu"
                    formControlName="password">
             @if (hasDisplayError('password')) {
               <div class="error-feedback">
@@ -67,7 +67,7 @@
           </div>
           <div class="my-2">
             <label class="form-label" for="cfpw">Confirm Password</label>
-            <input type="password" class="form-control text-white" id="cfpw" placeholder="Xác nhận mật khẩu"
+            <input type="password" class="form-control bg-soft-screen" id="cfpw" placeholder="Xác nhận mật khẩu"
                    formControlName="confirmPassword">
             @if (hasDisplayError('confirmPassword') && form.controls.confirmPassword.hasError('passwordMismatch')) {
               <div class="error-feedback">
@@ -77,7 +77,7 @@
           </div>
           <div class="my-2">
             <label class="form-label" for="fn">Full Name</label>
-            <input class="form-control" placeholder="Nhập tên hiển thị" id="fn" formControlName="fullName">
+            <input class="form-control bg-soft-screen" placeholder="Nhập tên hiển thị" id="fn" formControlName="fullName">
             @if (hasDisplayError('fullName') && form.controls.fullName.hasError('required')) {
               <div class="error-feedback">
                 Vui lòng điền tên đầy đủ
@@ -86,7 +86,7 @@
           </div>
           <div class="my-2">
             <label class="form-label">Email</label>
-            <input type="email" class="form-control" placeholder="Nhập email" formControlName="email">
+            <input type="email" class="form-control bg-soft-screen" placeholder="Nhập email" formControlName="email">
             @if (hasDisplayError('email')) {
               <div class="error-feedback">
                 @if (form.controls.email.hasError('required')) {

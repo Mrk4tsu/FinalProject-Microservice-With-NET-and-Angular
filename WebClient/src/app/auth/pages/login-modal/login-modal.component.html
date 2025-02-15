@@ -21,7 +21,7 @@
           </a>
         </div>
 
-        <form id="loginForm" class="mx-lg-4 mt-3 pt-3" [formGroup]="form" (ngSubmit)="onLogin()">
+        <form id="loginForm" class="mx-lg-4 mt-3 pt-3" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="d-flex justify-content-center">
             <div id="loginAlert" class="alert alert-warning d-none alert-dismissible mt-2 w-100">
             </div>
@@ -67,7 +67,7 @@
                 Nhớ mật khẩu
               </label>
 
-              <a href="#" class="text-tian-light text-decoration-none">Quên mật khẩu</a>
+              <a href="/forgot-password" class="text-tian-light text-decoration-none">Quên mật khẩu</a>
             </div>
 
           </div>

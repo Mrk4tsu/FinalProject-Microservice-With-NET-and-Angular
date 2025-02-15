@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:AngularServer": "node dist/web-client/server/server.mjs"
+    "serve:ssr:WebClient": "node dist/web-client/server/server.mjs"
   },
   "private": true,
   "dependencies": {

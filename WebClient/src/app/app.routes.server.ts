@@ -1,6 +1,4 @@
-import {PrerenderFallback, RenderMode, ServerRoute} from '@angular/ssr';
-import {inject} from '@angular/core';
-import {PostService} from './service/post.service';
+import {RenderMode, ServerRoute} from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
   {
@@ -14,20 +12,17 @@ export const serverRoutes: ServerRoute[] = [
   {
     path: 'register',
     renderMode: RenderMode.Client,
+  },
+  {
+    path: 'forgot-password',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'confirm-password',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: '**',
+    renderMode: RenderMode.Prerender,
   }
-  // {
-  //   path: 'contact',
-  //   renderMode: RenderMode.Server,
-  // },
-  // {
-  //   path: 'product/:id',
-  //   renderMode: RenderMode.Prerender,
-  //   async getPrerenderParams() {
-  //     const posts = inject(PostService);
-  //     const ids = await posts.getPosts();
-  //
-  //     return ids.map((id) => ({id}));
-  //   },
-  //   fallback: PrerenderFallback.None,
-  // },
 ];

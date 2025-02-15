@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "AngularServer": {
+    "WebClient": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -97,10 +97,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "AngularServer:build:production"
+              "buildTarget": "WebClient:build:production"
             },
             "development": {
-              "buildTarget": "AngularServer:build:development"
+              "buildTarget": "WebClient:build:development"
             }
           },
           "defaultConfiguration": "development"

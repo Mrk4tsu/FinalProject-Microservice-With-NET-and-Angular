@@ -7,6 +7,7 @@ import {environment} from '../../../environments/environment';
 import {isPlatformBrowser} from '@angular/common';
 import {jwtDecode} from 'jwt-decode';
 import {ACCESS_TOKEN_KEY, CLIENT_ID_KEY, REFRESH_TOKEN_KEY} from '../../shared/constant';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,20 +16,34 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
   private refreshTokenSubject = new BehaviorSubject<any>(null);
+  flatForm = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {
+  constructor(private http: HttpClient,
+              private router: Router,
+              private cookieService: CookieService) {
     this.loadUserFromToken();
   }
 
   urlAuth = environment.baseUrl + 'auth';
   urlUser = environment.baseUrl + 'user';
 
+  confirmPassword(username: string, token: string, formValue: any) {
+    const encodedToken = encodeURIComponent(token);
+    return this.http.post(this.urlUser + '/reset-password', {username, token: encodedToken, ...formValue});
+  }
+
+  requestForgotPassword(formData: any) {
+    return this.http.post(this.urlUser + '/request-forgot', {...formData});
+  }
+
   register(formData: any) {
     return this.http.post(this.urlAuth + '/register', formData);
   }
 
   login(formData: any) {
-    const userAgent = navigator.userAgent;
+    const userAgent = isPlatformBrowser(this.flatForm)
+      ? navigator.userAgent
+      : 'Server';
     const clientId = this.getClientId();
     return this.http.post(this.urlAuth + '/login', {...formData, clientId, userAgent}).pipe(
       tap((res: any) => {
@@ -80,6 +95,7 @@ export class AuthService {
   }
 
   logOut() {
+    const currentUrl = this.router.url;
     const userId = this.getCurrentUser()?.userId;
     const clientId = this.getClientId();
     this.http.post(this.urlAuth + '/logout', {userId, clientId}).subscribe({
@@ -87,14 +103,21 @@ export class AuthService {
         this.deleteToken();
         this.cookieService.delete(CLIENT_ID_KEY, '/');
 
-        this.updateUser({userId: 0, fullName: '', avatar: '', role: ''});
+        this.updateUser(null);
+        this.router.navigateByUrl(currentUrl).then(() => {
+          this.reloadWindow();
+        });
       },
       error: (err) => {
         this.deleteToken();
         this.cookieService.delete(CLIENT_ID_KEY, '/');
+        this.updateUser(null);
+
+        this.router.navigateByUrl(currentUrl).then(() => {
+          this.reloadWindow();
+        });
       }
     });
-    window.location.reload();
   }
 
   saveToken(accessToken: string, refreshToken: string, clientId: string, refreshTokenExpiry: string) {
@@ -131,7 +154,7 @@ export class AuthService {
     return this.cookieService.get(CLIENT_ID_KEY);
   }
 
-  updateUser(user: User) {
+  updateUser(user: User | null) {
     this.userSubject.next(user);
   }
 
@@ -158,5 +181,9 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+  reloadWindow() {
+    if (isPlatformBrowser(this.flatForm))
+      window.location.reload();
   }
 }

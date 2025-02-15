@@ -2,14 +2,15 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
-  OnInit,
+  ElementRef, inject,
+  OnInit, PLATFORM_ID,
   Renderer2,
   ViewChild
 } from '@angular/core';
 import {AuthService} from '../../../../auth/services/auth.service';
 import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {User} from '../../../../shared/models/user';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-navbar-mobile',
@@ -26,39 +27,46 @@ export class NavbarMobileComponent implements OnInit, AfterViewInit {
   @ViewChild('overlay', {static: false}) overlay!: ElementRef;
   @ViewChild('closeSidebar', {static: false}) closeSidebar!: ElementRef;
   user: User | null = new User();
+  platForm = inject(PLATFORM_ID);
+  isBrowser = isPlatformBrowser(this.platForm);
 
   constructor(private renderer: Renderer2,
               public authService: AuthService,
+              private router: Router,
               private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.user = user;
-      this.cdr.detectChanges(); // Ensure the UI updates
-    });
+    if (this.isBrowser) {
+      this.authService.user$.subscribe(user => {
+        this.user = user;
+        this.cdr.detectChanges(); // Ensure the UI updates
+      });
+    }
   }
 
   ngAfterViewInit(): void {
-    if (this.menuToggle && this.sidebar && this.overlay) {
-      this.renderer.listen(this.menuToggle.nativeElement, 'click', () => {
-        this.toggleSidebar(true);
-      });
-      this.renderer.listen(this.overlay.nativeElement, 'click', () => {
-        this.toggleSidebar(false);
-      });
-      if (this.closeSidebar) {
-        this.renderer.listen(this.closeSidebar.nativeElement, 'click', () => {
+    if (this.isBrowser) {
+      if (this.menuToggle && this.sidebar && this.overlay) {
+        this.renderer.listen(this.menuToggle.nativeElement, 'click', () => {
+          this.toggleSidebar(true);
+        });
+        this.renderer.listen(this.overlay.nativeElement, 'click', () => {
           this.toggleSidebar(false);
         });
+        if (this.closeSidebar) {
+          this.renderer.listen(this.closeSidebar.nativeElement, 'click', () => {
+            this.toggleSidebar(false);
+          });
+        }
+      } else {
+        console.warn('Menu toggle, sidebar, or overlay elements are not found in the DOM.');
       }
-    } else {
-      console.warn('Menu toggle, sidebar, or overlay elements are not found in the DOM.');
     }
   }
 
   onLogout(): void {
-
+    this.authService.logOut();
   }
 
   toggleSidebar(isActive: boolean): void {

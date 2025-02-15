@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import {catchError, throwError} from 'rxjs';
 import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidatorFn, Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {FirstkeyPipe} from '../../services/helper/firstkey.pipe';
 import {CommonModule} from '@angular/common';
+import {ThemeService} from '../../../shared/services/theme.service';
 
 @Component({
   selector: 'app-register',
@@ -29,6 +30,8 @@ export class RegisterComponent {
   constructor(public formBuilder: FormBuilder,
               private service: AuthService,
               private router: Router,
+              private themeService: ThemeService,
+              private cdr: ChangeDetectorRef,
               private toast: ToastrService) {
   }
 
@@ -43,6 +46,13 @@ export class RegisterComponent {
     ]],
     confirmPassword: ['', Validators.required],
   }, {validators: this.passwordMatchValidator()});
+
+  ngOnInit() {
+    this.themeService.theme$.subscribe(theme => {
+      document.body.className = theme;
+      this.cdr.detectChanges();
+    });
+  }
 
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): null => {
@@ -85,7 +95,7 @@ export class RegisterComponent {
               if (this.countdown === 0) {
                 clearInterval(interval);
                 this.toast.clear();
-                this.router.navigate(['/signin']);
+                this.router.navigate(['/login']).then();
               }
             }, 1000);
 

@@ -86,13 +86,13 @@
       <i class="fa fa-search" aria-hidden="true"></i>
     </button>
 
-    <button *ngIf=" !user?.avatar"
+    <button *ngIf="this.isBrowser && !user?.avatar"
             class="bg-success-25 mx-1 menu-icon rounded-circle border-0 p-1"
             data-bs-target="#loginModal" data-bs-toggle="modal" id="user-icon">
       <span class="material-symbols-rounded text-tian-light">account_circle</span>
     </button>
 
-    <div class="dropdown" *ngIf=" user && authService.getAccessToken()">
+    <div class="dropdown" *ngIf="this.isBrowser && user && authService.getAccessToken()">
       <a href="#" data-bs-toggle="dropdown">
         <img [src]="user.avatar" class="rounded-circle px-2" style="width: 47px;" alt="Avatar"/>
       </a>

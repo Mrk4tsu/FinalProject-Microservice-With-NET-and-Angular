@@ -1,6 +1,7 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, inject, OnInit, PLATFORM_ID, Renderer2} from '@angular/core';
 import {RecommendComponent} from './recommend/recommend.component';
 import {TopBlogComponent} from './top-blog/top-blog.component';
+import {isPlatformBrowser} from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +16,17 @@ import {TopBlogComponent} from './top-blog/top-blog.component';
   ]
 })
 export class HomeComponent implements OnInit {
+  platForm = inject(PLATFORM_ID);
+
   constructor(private renderer: Renderer2) {
   }
+
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platForm)) {
       this.initializeSeasonalThemes();
+    }
   }
+
   initializeSeasonalThemes(): void {
     const today = new Date();
     const startChristmas = new Date(today.getFullYear(), 11, 1);

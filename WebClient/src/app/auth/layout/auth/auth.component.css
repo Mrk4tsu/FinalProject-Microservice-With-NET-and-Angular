@@ -111,7 +111,9 @@ main {
   border-radius: 25px;
   border: 0;
 }
-
+/*input{*/
+/*  background-color: transparent !important;*/
+/*}*/
 input[type="checkbox"] {
   background-color: transparent;
 }
