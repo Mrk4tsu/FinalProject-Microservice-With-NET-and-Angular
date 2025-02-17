@@ -18,6 +18,11 @@ namespace FN.UserService.Controllers
             _redisService = redisService;
             _userService = userService;
         }
+        [HttpGet("hello"), AllowAnonymous]
+        public IActionResult Hello()
+        {
+            return Ok("Hello");
+        }
         [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Get(int userId)
         {

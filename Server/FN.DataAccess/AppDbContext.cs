@@ -21,5 +21,9 @@ namespace FN.DataAccess
             modelBuilder.Entity<IdentityRoleClaim<int>>().ToTable("role_claims");
             modelBuilder.Entity<IdentityUserToken<int>>().ToTable("user_tokens").HasKey(x => x.UserId);
         }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<ProductDetail> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
     }
 }

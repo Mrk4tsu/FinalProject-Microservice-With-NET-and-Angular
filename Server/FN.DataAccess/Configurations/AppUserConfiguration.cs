@@ -23,6 +23,7 @@ namespace FN.DataAccess.Configurations
             builder.HasIndex(x => x.UserName)
                 .HasDatabaseName("idx_app_username")
                 .IsUnique();
+            builder.HasMany(x => x.Items).WithOne(x => x.User).HasForeignKey(x => x.UserId);
         }
     }
 }
