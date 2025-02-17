@@ -19,6 +19,7 @@ namespace FN.DataAccess.Configurations
             builder.Property(x => x.Note).HasMaxLength(250).IsRequired();
             builder.Property(x => x.ProductType).HasDefaultValue(ProductType.PUBLIC).IsRequired();
             builder.Property(x => x.Status).HasDefaultValue(true).IsRequired();
+            builder.Property(x => x.DownloadCount).HasDefaultValue(0);
 
             builder.HasIndex(x => x.ItemId);
             builder.HasOne(x => x.Item).WithMany(x => x.ProductDetails).HasForeignKey(x => x.ItemId);

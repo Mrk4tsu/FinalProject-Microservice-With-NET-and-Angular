@@ -9,6 +9,7 @@ namespace FN.DataAccess.Entities
         public string Detail { get; set; } = string.Empty;
         public int LikeCount { get; set; }
         public int DisLikeCount { get; set; }
+        public int DownloadCount { get; set; }
         public string Version { get; set; } = string.Empty;
         public string Note { get; set; } = string.Empty;
         public ProductType ProductType { get; set; } = ProductType.PUBLIC;
