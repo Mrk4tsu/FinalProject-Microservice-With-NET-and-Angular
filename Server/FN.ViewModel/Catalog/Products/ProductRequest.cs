@@ -27,8 +27,12 @@ namespace FN.ViewModel.Catalog.Products
         public byte CategoryId { get; set; }
         public ProductType Status { get; set; }
     }
-    public class CreatePriceRequest
+    public class CreatePriceRequest : CreateImageRequest
     {
         public decimal Price { get; set; }
+    }
+    public class CreateImageRequest
+    {
+        public IFormFileCollection Images { get; set; }
     }
 }

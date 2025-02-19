@@ -18,5 +18,6 @@ namespace FN.DataAccess.Entities
         public Item Item { get; set; }
         public Category Category { get; set; }
         public List<ProductPrice> ProductPrices { get; set; }
+        public List<ProductImage> ProductImages { get; set; }
     }
 }

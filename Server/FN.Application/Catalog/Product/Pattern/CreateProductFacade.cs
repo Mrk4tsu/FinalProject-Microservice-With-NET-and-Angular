@@ -26,6 +26,7 @@ namespace FN.Application.Catalog.Product.Pattern
                 var item = await CreateItem(request, userId);
                 var productDetail = await CreateProductDetail(request, item.Id);
                 await CreatePrice(request, productDetail.Id);
+                await CreateImage(request, productDetail, item);
                 await transaction.CommitAsync();
                 return new ApiSuccessResult<int>(item.Id);
             }
@@ -94,6 +95,34 @@ namespace FN.Application.Catalog.Product.Pattern
             await _db.ProductPrices.AddAsync(price);
             await _db.SaveChangesAsync();
         }
+        private async Task CreateImage(CreateImageRequest request, ProductDetail product, Item item)
+        {
+            if (product.ProductImages == null)
+            {
+                product.ProductImages = new List<ProductImage>();
+            }
+
+            if (request.Images != null && request.Images.Count > 0)
+            {
+                foreach (var imageFile in request.Images)
+                {
+                    var publicId = _image.GenerateId();
+                    var resultUpload = await _image.UploadImage(imageFile, publicId, Folder(item.Code));
+                    if (resultUpload == null) throw new Exception("Upload ảnh sản phẩm không thành công");
+
+                    product.ProductImages.Add(new ProductImage
+                    {
+                        Caption = imageFile.FileName,
+                        ImageUrl = resultUpload,
+                        PublicId = publicId,
+                        ProductDetailId = product.Id
+                    });
+                }
+            }
+
+            await _db.SaveChangesAsync();
+        }
+
         private string Folder(string code)
         {
             return $"{ROOT}/{code}";
