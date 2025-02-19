@@ -7,6 +7,8 @@ namespace FN.Application.Catalog.Categories
     {
         Task<ApiResult<int>> Create(CategoryCreateUpdateRequest request);
         Task<ApiResult<bool>> Update(CategoryCreateUpdateRequest request, byte categoryId);
+        Task<ApiResult<bool>> Delete(byte categoryId);
+        Task<ApiResult<bool>> PermanentlyDelete(byte categoryId);
         Task<ApiResult<List<CategoryViewModel>>> List();
     }
 }

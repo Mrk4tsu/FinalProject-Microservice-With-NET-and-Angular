@@ -56,6 +56,41 @@ namespace FN.Application.Catalog.Categories
             }).ToListAsync();
             return new ApiSuccessResult<List<CategoryViewModel>>(result);
         }
+        public async Task<ApiResult<bool>> Delete(byte categoryId)
+        {
+            var category = await _db.Categories.FindAsync(categoryId);
+            if (category == null) return new ApiErrorResult<bool>("Không tìm thấy danh mục");
+
+            category.Status = false;
+            _db.Categories.Update(category);
+            await _db.SaveChangesAsync();
+            return new ApiSuccessResult<bool>();
+        }
+
+        public async Task<ApiResult<bool>> PermanentlyDelete(byte categoryId)
+        {
+            using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                var category = await _db.Categories.FindAsync(categoryId);
+                if (category == null) return new ApiErrorResult<bool>("Không tìm thấy danh mục");
+
+                var deleteImage = await _image.DeleteImage(SetFolder(category.SeoAlias) + "/" + category.SeoAlias);
+                if (deleteImage)
+                    await _image.DeleteFolderImage(SetFolder(category.SeoAlias));
+
+                _db.Categories.Remove(category);
+                await _db.SaveChangesAsync();
+
+                await _db.Database.CommitTransactionAsync();
+                return new ApiSuccessResult<bool>();
+            }
+            catch (Exception ex)
+            {
+                await _db.Database.RollbackTransactionAsync();
+                return new ApiErrorResult<bool>(ex.Message);
+            }
+        }
 
         public async Task<ApiResult<bool>> Update(CategoryCreateUpdateRequest request, byte categoryId)
         {

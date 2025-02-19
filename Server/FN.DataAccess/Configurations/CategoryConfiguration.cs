@@ -18,6 +18,7 @@ namespace FN.DataAccess.Configurations
             builder.Property(x => x.SeoDescription).HasMaxLength(150);
             builder.Property(x => x.SeoImage).HasMaxLength(250);
             builder.Property(x => x.SeoKeyword).HasMaxLength(70);
+            builder.Property(x => x.Status).HasDefaultValue(true);
 
             builder.HasIndex(x => x.SeoAlias).HasDatabaseName("idx_seo_alias").IsUnique();
         }

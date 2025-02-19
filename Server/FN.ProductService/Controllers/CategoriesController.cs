@@ -39,5 +39,21 @@ namespace FN.ProductService.Controllers
                 return Ok(result);
             return BadRequest(result.Message);
         }
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete(byte categoryId)
+        {
+            var result = await _categoryService.Delete(categoryId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
+        [HttpDelete("permanently-delete")]
+        public async Task<IActionResult> PermanentlyDelete(byte categoryId)
+        {
+            var result = await _categoryService.PermanentlyDelete(categoryId);
+            if (result.Success)
+                return Ok(result);
+            return BadRequest(result.Message);
+        }
     }
 }
