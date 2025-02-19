@@ -23,7 +23,7 @@ namespace FN.Application.Catalog.Product.Pattern
             try
             {
                 var item = await CreateItem(request, userId);
-
+                await CreateProductDetail(request, item.Id);
                 await transaction.CommitAsync();
                 return new ApiSuccessResult<int>(item.Id);
             }
@@ -61,6 +61,20 @@ namespace FN.Application.Catalog.Product.Pattern
             await _db.SaveChangesAsync();
 
             return newItem;
+        }
+        private async Task CreateProductDetail(CreateProductDetailRequest request, int itemId)
+        {
+            var productDetail = new ProductDetail()
+            {
+                Detail = request.Detail,
+                Version = request.Version,
+                Note = request.Note,
+                ItemId = itemId,
+                CategoryId = request.CategoryId,
+                Status = request.Status
+            };
+            await _db.ProductDetails.AddAsync(productDetail);
+            await _db.SaveChangesAsync();
         }
         private string Folder(string code)
         {

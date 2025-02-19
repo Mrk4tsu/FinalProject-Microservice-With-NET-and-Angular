@@ -11,12 +11,20 @@ namespace FN.ViewModel.Catalog.Products
         public int? CategoryId { get; set; }
         public string? CategorySeoAlias { get; set; }
     }
-    public class CreateProductRequest
+    public class CreateProductRequest : CreateProductDetailRequest
     {
         public string Title { get; set; }
         public string Description { get; set; }
         public string Keywords { get; set; }
         public IFormFile Thumbnail { get; set; }
         public string SeoTitle { get; set; }
+    }
+    public class CreateProductDetailRequest
+    {
+        public string Detail { get; set; }
+        public string Version { get; set; }
+        public string Note { get; set; }
+        public byte CategoryId { get; set; }
+        public ProductType Status { get; set; }
     }
 }

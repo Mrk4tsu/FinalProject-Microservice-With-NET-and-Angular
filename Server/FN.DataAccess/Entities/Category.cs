@@ -11,5 +11,6 @@
         public string SeoImage { get; set; }
         public string Other { get; set; }
         public bool Status { get; set; }
+        public List<ProductDetail> ProductDetails { get; set; }
     }
 }

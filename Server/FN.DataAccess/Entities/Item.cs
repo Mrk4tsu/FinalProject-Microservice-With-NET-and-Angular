@@ -17,5 +17,6 @@
         public DateTime ModifiedDate { get; set; }
         public bool IsDeleted { get; set; }
         public AppUser User { get; set; }
+        public List<ProductDetail> ProductDetails { get; set; }
     }
 }

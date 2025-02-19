@@ -27,7 +27,8 @@ namespace FN.DataAccess.Configurations
 
             builder.HasIndex(x => x.Code).HasDatabaseName("ix_item_code").IsUnique();
 
-            builder.HasOne(x => x.User).WithMany(x => x.Items).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);           
+            builder.HasOne(x => x.User).WithMany(x => x.Items).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.ProductDetails).WithOne(x => x.Item).HasForeignKey(x => x.ItemId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
