@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace FN.ViewModel.Helper.Device
+namespace FN.Utilities.Device
 {
     public class UserDevice
     {

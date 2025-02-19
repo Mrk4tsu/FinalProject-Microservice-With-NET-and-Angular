@@ -15,8 +15,7 @@ namespace FN.DataAccess.Configurations
                 .IsUnicode();
 
             builder.HasIndex(x => x.NormalizedName)
-                .HasDatabaseName("idx_app_roles_normalized_name")
-                .IsUnique();
+                .HasDatabaseName("idx_app_roles_normalized_name");
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using FN.ViewModel.Helper.API;
-using FN.ViewModel.Helper.Device;
+﻿using FN.Utilities.Device;
+using FN.ViewModel.Helper.API;
 using FN.ViewModel.Systems.Token;
 using FN.ViewModel.Systems.User;
 using Microsoft.AspNetCore.Http;

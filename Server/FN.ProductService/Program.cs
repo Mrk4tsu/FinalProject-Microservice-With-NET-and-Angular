@@ -1,16 +1,26 @@
+using FN.Application.Catalog.Product;
+using FN.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
+builder.Services.AddSwaggerExplorer()
+    .InjectDbContext(builder.Configuration)
+    .InjectRedis(builder.Configuration)
+    .InjectMongoDb(builder.Configuration)
+    .AddIdentityHandlersAndStores()
+    .AddIdentityAuth(builder.Configuration)
+    .ConfigureIdentityOptions()
+    .AddImageConfig(builder.Configuration);
 
+builder.Services.AddScoped<IProductPublicService, ProductPublicService>();
+builder.Services.AddScoped<IProductManageService, ProductManageService>();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.ConfigureSwaggerExplorer()
+    .ConfigureCORS(builder.Configuration)
+    .ConfigureAppExplorer()
+    .AddIdentityAuthMiddlewares();
 
 app.MapControllers();
 

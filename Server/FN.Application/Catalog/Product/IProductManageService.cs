@@ -7,5 +7,6 @@ namespace FN.Application.Catalog.Product
     public interface IProductManageService
     {
         Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts();
+        Task<ApiResult<int>> Create(CreateProductRequest request, int userId);
     }
 }

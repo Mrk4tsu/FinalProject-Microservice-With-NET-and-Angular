@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using FN.DataAccess.Entities;
+using FN.DataAccess.Enums;
+using FN.ViewModel.Catalog.Categories;
+using FN.ViewModel.Catalog.Products;
 using FN.ViewModel.Systems.User;
 
-namespace FN.Application.MapProfile
+namespace FN.Application.Base
 {
     public class AutoMapperProfile : Profile
     {

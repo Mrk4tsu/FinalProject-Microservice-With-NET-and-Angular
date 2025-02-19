@@ -31,12 +31,6 @@ namespace FN.Application.Helper.Images
             }
             return null;
         }
-
-
-
-
-
-
         public string GenerateId() => Guid.NewGuid().ToString().Substring(4, 4);
 
     }

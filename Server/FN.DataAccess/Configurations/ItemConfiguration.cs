@@ -12,24 +12,22 @@ namespace FN.DataAccess.Configurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
 
-            builder.Property(x => x.Name).HasMaxLength(150).IsRequired().IsUnicode();
-            builder.Property(x => x.Code).HasMaxLength(10).IsRequired();
-            builder.Property(x => x.NormalizeName).HasMaxLength(150).IsRequired();
-            builder.Property(x => x.SeoTitle).HasMaxLength(150).IsRequired();
-            builder.Property(x => x.SeoAlias).HasMaxLength(150).IsRequired();
-            builder.Property(x => x.SeoDescription).HasMaxLength(150).IsRequired();
-            builder.Property(x => x.SeoKeyword).HasMaxLength(150).IsRequired();
-            builder.Property(x => x.Thumbnail).HasMaxLength(150).IsRequired();
+            builder.Property(x => x.UserId).IsRequired();
+            builder.Property(x => x.Title).HasMaxLength(256).IsRequired();
+            builder.Property(x => x.NormalizedTitle).HasMaxLength(256).IsRequired();
+            builder.Property(x => x.Description).HasMaxLength(250);
+            builder.Property(x => x.Keywords).HasMaxLength(150);
+            builder.Property(x => x.Thumbnail).HasMaxLength(250);
             builder.Property(x => x.ViewCount).HasDefaultValue(0);
-            builder.Property(x => x.CreatedDate).HasDefaultValue(DateTime.UtcNow);
-            builder.Property(x => x.ModifiedDate).HasDefaultValue(DateTime.UtcNow);
+            builder.Property(x => x.SeoAlias).HasMaxLength(256);
+            builder.Property(x => x.SeoTitle).HasMaxLength(256);
+            builder.Property(x => x.CreatedDate).IsRequired().HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.ModifiedDate).HasDefaultValue(DateTime.Now);
+            builder.Property(x => x.IsDeleted).HasDefaultValue(false);
 
-            builder.HasOne(x => x.Category).WithMany(x => x.Items).HasForeignKey(x => x.CategoryId);
-            builder.HasOne(x => x.User).WithMany(x => x.Items).HasForeignKey(x => x.UserId);
-            builder.HasMany(x => x.ProductDetails).WithOne(x => x.Item).HasForeignKey(x => x.ItemId);
+            builder.HasIndex(x => x.Code).HasDatabaseName("ix_item_code").IsUnique();
 
-            builder.HasIndex(x => x.Code).IsUnique();
-            builder.HasIndex(x => x.SeoAlias).IsUnique();
+            builder.HasOne(x => x.User).WithMany(x => x.Items).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);           
         }
     }
 }
