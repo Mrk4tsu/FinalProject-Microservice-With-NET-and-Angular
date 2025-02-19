@@ -1,4 +1,5 @@
 ﻿using FN.Application.Helper.Images;
+using FN.Application.Systems.Redis;
 using FN.DataAccess;
 using FN.DataAccess.Entities;
 using FN.DataAccess.Enums;
@@ -8,16 +9,12 @@ using FN.ViewModel.Helper.API;
 
 namespace FN.Application.Catalog.Product.Pattern
 {
-    public class CreateProductFacade
+    public class CreateProductFacade : BaseService
     {
-        private readonly AppDbContext _db;
-        private readonly IImageService _image;
-        const string ROOT = "product";
-        public CreateProductFacade(AppDbContext db, IImageService image)
+        public CreateProductFacade(AppDbContext db, IRedisService dbRedis, IImageService image) : base(db, dbRedis, image)
         {
-            _db = db;
-            _image = image;
         }
+
         public async Task<ApiResult<int>> Create(CreateProductRequest request, int userId)
         {
             using var transaction = await _db.Database.BeginTransactionAsync();
@@ -28,6 +25,7 @@ namespace FN.Application.Catalog.Product.Pattern
                 await CreatePrice(request, productDetail.Id);
                 await CreateImage(request, productDetail, item);
                 await transaction.CommitAsync();
+                await RemoveOldCache();
                 return new ApiSuccessResult<int>(item.Id);
             }
             catch (Exception ex)
@@ -121,11 +119,6 @@ namespace FN.Application.Catalog.Product.Pattern
             }
 
             await _db.SaveChangesAsync();
-        }
-
-        private string Folder(string code)
-        {
-            return $"{ROOT}/{code}";
         }
     }
 }

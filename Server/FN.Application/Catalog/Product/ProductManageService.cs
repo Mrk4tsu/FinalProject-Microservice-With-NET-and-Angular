@@ -8,6 +8,7 @@ using FN.Utilities;
 using FN.ViewModel.Catalog.Products;
 using FN.ViewModel.Helper.API;
 using FN.ViewModel.Helper.Paging;
+using Mailjet.Client.Resources;
 using Microsoft.Extensions.Configuration;
 
 namespace FN.Application.Catalog.Product
@@ -32,13 +33,14 @@ namespace FN.Application.Catalog.Product
 
         public async Task<ApiResult<int>> Create(CreateProductRequest request, int userId)
         {
-            var facade = new CreateProductFacade(_db, _image);
+            var facade = new CreateProductFacade(_db, _dbRedis, _image);
             return await facade.Create(request, userId);
         }
 
-        public Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts()
+        public async Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts(ProductPagingRequest request, int userId)
         {
-            throw new NotImplementedException();
+            var facade = new GetProductFacade(_db, _dbRedis, _image);
+            return await facade.GetProductsOptimized(request, true, userId);
         }
 
     }
