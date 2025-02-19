@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FN.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250219162934_Create_ProductDetail")]
-    partial class Create_ProductDetail
+    [Migration("20250219170253_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("TimeCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 19, 23, 29, 33, 479, DateTimeKind.Local).AddTicks(6264));
+                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 2, 53, 62, DateTimeKind.Local).AddTicks(5758));
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
@@ -204,7 +204,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 19, 23, 29, 33, 480, DateTimeKind.Local).AddTicks(2284));
+                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 2, 53, 63, DateTimeKind.Local).AddTicks(1941));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -224,7 +224,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 19, 23, 29, 33, 480, DateTimeKind.Local).AddTicks(2807));
+                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 2, 53, 63, DateTimeKind.Local).AddTicks(2422));
 
                     b.Property<string>("NormalizedTitle")
                         .IsRequired()
@@ -330,6 +330,39 @@ namespace FN.DataAccess.Migrations
                         .HasDatabaseName("idx_productDetail_itemId");
 
                     b.ToTable("product_details", (string)null);
+                });
+
+            modelBuilder.Entity("FN.DataAccess.Entities.ProductPrice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("PriceType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductDetailId");
+
+                    b.ToTable("ProductPrices");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -467,6 +500,17 @@ namespace FN.DataAccess.Migrations
                     b.Navigation("Item");
                 });
 
+            modelBuilder.Entity("FN.DataAccess.Entities.ProductPrice", b =>
+                {
+                    b.HasOne("FN.DataAccess.Entities.ProductDetail", "ProductDetail")
+                        .WithMany("ProductPrices")
+                        .HasForeignKey("ProductDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductDetail");
+                });
+
             modelBuilder.Entity("FN.DataAccess.Entities.AppUser", b =>
                 {
                     b.Navigation("Items");
@@ -480,6 +524,11 @@ namespace FN.DataAccess.Migrations
             modelBuilder.Entity("FN.DataAccess.Entities.Item", b =>
                 {
                     b.Navigation("ProductDetails");
+                });
+
+            modelBuilder.Entity("FN.DataAccess.Entities.ProductDetail", b =>
+                {
+                    b.Navigation("ProductPrices");
                 });
 #pragma warning restore 612, 618
         }

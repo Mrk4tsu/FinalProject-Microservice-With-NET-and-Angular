@@ -1,6 +1,7 @@
 ﻿using FN.Application.Helper.Images;
 using FN.DataAccess;
 using FN.DataAccess.Entities;
+using FN.DataAccess.Enums;
 using FN.Utilities;
 using FN.ViewModel.Catalog.Products;
 using FN.ViewModel.Helper.API;
@@ -23,7 +24,8 @@ namespace FN.Application.Catalog.Product.Pattern
             try
             {
                 var item = await CreateItem(request, userId);
-                await CreateProductDetail(request, item.Id);
+                var productDetail = await CreateProductDetail(request, item.Id);
+                await CreatePrice(request, productDetail.Id);
                 await transaction.CommitAsync();
                 return new ApiSuccessResult<int>(item.Id);
             }
@@ -62,7 +64,7 @@ namespace FN.Application.Catalog.Product.Pattern
 
             return newItem;
         }
-        private async Task CreateProductDetail(CreateProductDetailRequest request, int itemId)
+        private async Task<ProductDetail> CreateProductDetail(CreateProductDetailRequest request, int itemId)
         {
             var productDetail = new ProductDetail()
             {
@@ -74,6 +76,22 @@ namespace FN.Application.Catalog.Product.Pattern
                 Status = request.Status
             };
             await _db.ProductDetails.AddAsync(productDetail);
+            await _db.SaveChangesAsync();
+            return productDetail;
+        }
+        private async Task CreatePrice(CreatePriceRequest request, int productDetailId)
+        {
+            var price = new ProductPrice()
+            {
+                Price = request.Price,
+                ProductDetailId = productDetailId,
+                CreatedDate = DateTime.UtcNow,
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.MaxValue,
+                PriceType = PriceType.BASE
+            };
+
+            await _db.ProductPrices.AddAsync(price);
             await _db.SaveChangesAsync();
         }
         private string Folder(string code)
