@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using System.Net;
 
 namespace FN.Application.Helper.Images
 {
@@ -27,11 +28,31 @@ namespace FN.Application.Helper.Images
                     Overwrite = true
                 };
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-                return uploadResult.SecureUrl.AbsoluteUri;
+                if (uploadResult.StatusCode == HttpStatusCode.OK)
+                    return uploadResult.SecureUrl.AbsoluteUri;
+                return null;
             }
             return null;
         }
         public string GenerateId() => Guid.NewGuid().ToString().Substring(4, 4);
 
+        public async Task<bool> DeleteImage(string publicId)
+        {
+            var deleteParams = new DeletionParams($"{Root}/{publicId}")
+            {
+                ResourceType = ResourceType.Image,
+            };
+            var result = await _cloudinary.DestroyAsync(deleteParams);
+            if (result.StatusCode == HttpStatusCode.OK) return true;
+            return false;
+        }
+        public async Task<bool> DeleteFolderImage(string folderName)
+        {
+            var result = await _cloudinary.DeleteFolderAsync($"{Root}/{folderName}");
+            Console.WriteLine(result.StatusCode.ToString());
+            if (result.StatusCode != HttpStatusCode.OK)
+                return false;
+            return true;
+        }
     }
 }

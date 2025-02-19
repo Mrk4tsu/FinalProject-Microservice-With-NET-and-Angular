@@ -1,3 +1,4 @@
+using FN.Application.Catalog.Categories;
 using FN.Application.Catalog.Product;
 using FN.Extensions;
 
@@ -15,6 +16,7 @@ builder.Services.AddSwaggerExplorer()
 
 builder.Services.AddScoped<IProductPublicService, ProductPublicService>();
 builder.Services.AddScoped<IProductManageService, ProductManageService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 var app = builder.Build();
 
 app.ConfigureSwaggerExplorer()

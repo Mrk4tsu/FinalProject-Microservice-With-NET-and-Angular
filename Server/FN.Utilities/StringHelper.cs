@@ -6,8 +6,20 @@ namespace FN.Utilities
 {
     public class StringHelper
     {
+        public static bool IsNullOrEmpty(params string[] values)
+        {
+            foreach (var value in values)
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public static string GenerateSeoAlias(string input)
         {
+            if (string.IsNullOrEmpty(input)) return input;
             input = input.Trim();
             for (int i = 0x20; i < 0x30; i++)
             {
@@ -43,11 +55,13 @@ namespace FN.Utilities
         public static string NormalizeString(string input)
         {
             if (string.IsNullOrEmpty(input))
+            {
                 return input;
-            string normalizedString = input.ToLower();
-            normalizedString = Regex.Replace(normalizedString, @"\s+", " ").Trim();
-            normalizedString = Regex.Replace(normalizedString, @"[^a-z0-9\s-]", "");
+            }
+            string normalizedString = input.ToLowerInvariant();
             normalizedString = RemoveDiacritics(normalizedString);
+            normalizedString = Regex.Replace(normalizedString, @"\s+", " ");
+
             return normalizedString;
         }
         static string GeneratePrefix(string input)

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FN.Application.Catalog.Product.Pattern;
 using FN.Application.Helper.Images;
 using FN.Application.Systems.Redis;
 using FN.DataAccess;
@@ -31,38 +32,14 @@ namespace FN.Application.Catalog.Product
 
         public async Task<ApiResult<int>> Create(CreateProductRequest request, int userId)
         {
-            var code = StringHelper.GenerateProductCode(request.Title);
-            var folder = Folder(code);
-
-            var thumbnail = await _image.UploadImage(request.Thumbnail, code, folder);
-            var newItem = new Item()
-            {
-                Title = request.Title,
-                Description = request.Description,
-                Keywords = request.Keywords,
-                SeoTitle = request.SeoTitle,
-                UserId = userId,
-                CreatedDate = DateTime.Now,
-                ModifiedDate = DateTime.Now,
-                NormalizedTitle = StringHelper.NormalizeString(request.Title),
-                SeoAlias = StringHelper.GenerateSeoAlias(request.SeoTitle),
-                Code = code,
-                Thumbnail = thumbnail ?? "",
-            };
-
-            await _db.Items.AddAsync(newItem);
-            await _db.SaveChangesAsync();
-            return new ApiSuccessResult<int>(newItem.Id);
+            var facade = new CreateProductFacade(_db, _image);
+            return await facade.Create(request, userId);
         }
 
         public Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts()
         {
             throw new NotImplementedException();
         }
-        const string ROOT = "product";
-        private string Folder(string code)
-        {
-            return $"{ROOT}/{code}";
-        }
+
     }
 }
