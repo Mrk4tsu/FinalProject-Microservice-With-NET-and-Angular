@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FN.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250219170253_Init")]
-    partial class Init
+    [Migration("20250221114736_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,7 +116,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("TimeCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 2, 53, 62, DateTimeKind.Local).AddTicks(5758));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 661, DateTimeKind.Local).AddTicks(6954));
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
@@ -204,7 +204,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 2, 53, 63, DateTimeKind.Local).AddTicks(1941));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3083));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -224,7 +224,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 2, 53, 63, DateTimeKind.Local).AddTicks(2422));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3649));
 
                     b.Property<string>("NormalizedTitle")
                         .IsRequired()
@@ -332,6 +332,37 @@ namespace FN.DataAccess.Migrations
                     b.ToTable("product_details", (string)null);
                 });
 
+            modelBuilder.Entity("FN.DataAccess.Entities.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Caption")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<int>("ProductDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductDetailId");
+
+                    b.ToTable("product_image", (string)null);
+                });
+
             modelBuilder.Entity("FN.DataAccess.Entities.ProductPrice", b =>
                 {
                     b.Property<int>("Id")
@@ -341,16 +372,21 @@ namespace FN.DataAccess.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime(6)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 11, 47, 35, 663, DateTimeKind.Utc).AddTicks(7842));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("PriceType")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("ProductDetailId")
                         .HasColumnType("int");
@@ -362,7 +398,7 @@ namespace FN.DataAccess.Migrations
 
                     b.HasIndex("ProductDetailId");
 
-                    b.ToTable("ProductPrices");
+                    b.ToTable("product_prices", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -500,6 +536,17 @@ namespace FN.DataAccess.Migrations
                     b.Navigation("Item");
                 });
 
+            modelBuilder.Entity("FN.DataAccess.Entities.ProductImage", b =>
+                {
+                    b.HasOne("FN.DataAccess.Entities.ProductDetail", "ProductDetail")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductDetail");
+                });
+
             modelBuilder.Entity("FN.DataAccess.Entities.ProductPrice", b =>
                 {
                     b.HasOne("FN.DataAccess.Entities.ProductDetail", "ProductDetail")
@@ -528,6 +575,8 @@ namespace FN.DataAccess.Migrations
 
             modelBuilder.Entity("FN.DataAccess.Entities.ProductDetail", b =>
                 {
+                    b.Navigation("ProductImages");
+
                     b.Navigation("ProductPrices");
                 });
 #pragma warning restore 612, 618

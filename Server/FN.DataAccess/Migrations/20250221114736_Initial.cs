@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FN.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,7 +46,7 @@ namespace FN.DataAccess.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Avatar = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, defaultValue: "https://res.cloudinary.com/dje3seaqj/image/upload/v1736989161/gatapchoi_biglrl.jpg")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TimeCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 20, 0, 2, 53, 62, DateTimeKind.Local).AddTicks(5758)),
+                    TimeCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 18, 47, 35, 661, DateTimeKind.Local).AddTicks(6954)),
                     UserName = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "longtext", nullable: true)
@@ -215,8 +215,8 @@ namespace FN.DataAccess.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SeoTitle = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 20, 0, 2, 53, 63, DateTimeKind.Local).AddTicks(1941)),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 20, 0, 2, 53, 63, DateTimeKind.Local).AddTicks(2422)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3083)),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3649)),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -270,23 +270,49 @@ namespace FN.DataAccess.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ProductPrices",
+                name: "product_image",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PublicId = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Caption = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProductDetailId = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "varchar(250)", maxLength: 250, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_product_image", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_product_image_product_details_ProductDetailId",
+                        column: x => x.ProductDetailId,
+                        principalTable: "product_details",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "product_prices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ProductDetailId = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    PriceType = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    PriceType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 11, 47, 35, 663, DateTimeKind.Utc).AddTicks(7842)),
                     StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductPrices", x => x.Id);
+                    table.PrimaryKey("PK_product_prices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductPrices_product_details_ProductDetailId",
+                        name: "FK_product_prices_product_details_ProductDetailId",
                         column: x => x.ProductDetailId,
                         principalTable: "product_details",
                         principalColumn: "Id",
@@ -333,8 +359,13 @@ namespace FN.DataAccess.Migrations
                 column: "ItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductPrices_ProductDetailId",
-                table: "ProductPrices",
+                name: "IX_product_image_ProductDetailId",
+                table: "product_image",
+                column: "ProductDetailId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_product_prices_ProductDetailId",
+                table: "product_prices",
                 column: "ProductDetailId");
         }
 
@@ -345,7 +376,10 @@ namespace FN.DataAccess.Migrations
                 name: "app_roles");
 
             migrationBuilder.DropTable(
-                name: "ProductPrices");
+                name: "product_image");
+
+            migrationBuilder.DropTable(
+                name: "product_prices");
 
             migrationBuilder.DropTable(
                 name: "role_claims");

@@ -4,8 +4,5 @@
     {
         PUBLIC,
         PRIVATE,
-        DEMO,
-        SUPPORTED,
-        OUT_OF_SUPPORT
     }
 }

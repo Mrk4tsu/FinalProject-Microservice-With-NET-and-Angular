@@ -113,7 +113,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("TimeCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 17, 36, 820, DateTimeKind.Local).AddTicks(3948));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 661, DateTimeKind.Local).AddTicks(6954));
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
@@ -201,7 +201,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 17, 36, 820, DateTimeKind.Local).AddTicks(9344));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3083));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -221,7 +221,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 20, 0, 17, 36, 820, DateTimeKind.Local).AddTicks(9757));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3649));
 
                     b.Property<string>("NormalizedTitle")
                         .IsRequired()
@@ -371,7 +371,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 19, 17, 17, 36, 822, DateTimeKind.Utc).AddTicks(2085));
+                        .HasDefaultValue(new DateTime(2025, 2, 21, 11, 47, 35, 663, DateTimeKind.Utc).AddTicks(7842));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");

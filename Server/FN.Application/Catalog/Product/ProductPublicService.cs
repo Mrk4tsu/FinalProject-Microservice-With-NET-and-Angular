@@ -22,7 +22,7 @@ namespace FN.Application.Catalog.Product
         public async Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts(ProductPagingRequest request)
         {
             var facade = new GetProductFacade(_db, _dbRedis!, null!);
-            return await facade.GetProductsOptimized(request, false, null);
+            return await facade.GetProducts(request, false, false, null);
         }
     }
 }

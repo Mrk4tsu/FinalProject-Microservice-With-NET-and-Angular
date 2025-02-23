@@ -15,7 +15,7 @@ namespace FN.Application.Catalog.Product.Pattern
         {
         }
 
-        public async Task<ApiResult<PagedResult<ProductViewModel>>> GetProductsOptimized(ProductPagingRequest request, bool isMe, int? currentUserId)
+        public async Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts(ProductPagingRequest request, bool isMe, bool isDeleted, int? currentUserId)
         {
             const string cacheKey = SystemConstant.CACHE_PRODUCT;
             List<ProductViewModel>? cachedData = null;
@@ -35,7 +35,7 @@ namespace FN.Application.Catalog.Product.Pattern
             }
             else
             {
-                var query = BuildBaseQuery();
+                var query = BuildBaseQuery(isDeleted);
                 var filteredQuery = ApplyDatabaseFilters(query, request, isMe, currentUserId);
                 result = await ExecuteDatabasePaging(filteredQuery, request);
 
@@ -44,11 +44,11 @@ namespace FN.Application.Catalog.Product.Pattern
 
             return new ApiSuccessResult<PagedResult<ProductViewModel>>(result);
         }
-        private IQueryable<ProductViewModel> BuildBaseQuery()
+        private IQueryable<ProductViewModel> BuildBaseQuery(bool isDeleted)
         {
             return _db.Items
                 .AsNoTracking()
-                .Where(i => !i.IsDeleted)
+                .Where(i => i.IsDeleted == isDeleted)
                 .Join(_db.ProductDetails,
                     item => item.Id,
                     detail => detail.ItemId,

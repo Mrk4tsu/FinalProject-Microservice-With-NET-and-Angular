@@ -17,7 +17,6 @@ namespace FN.ViewModel.Catalog.Products
         public string Description { get; set; }
         public string Keywords { get; set; }
         public IFormFile Thumbnail { get; set; }
-        public string SeoTitle { get; set; }
     }
     public class CreateProductDetailRequest : CreatePriceRequest
     {
@@ -25,7 +24,6 @@ namespace FN.ViewModel.Catalog.Products
         public string Version { get; set; }
         public string Note { get; set; }
         public byte CategoryId { get; set; }
-        public ProductType Status { get; set; }
     }
     public class CreatePriceRequest : CreateImageRequest
     {

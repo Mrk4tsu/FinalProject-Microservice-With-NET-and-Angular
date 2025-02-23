@@ -13,6 +13,27 @@ namespace FN.Application.Helper.Images
         {
             _cloudinary = cloudinary;
         }
+        
+        public string GenerateId() => Guid.NewGuid().ToString().Substring(4, 4);
+
+        public async Task<bool> DeleteImage(string publicId)
+        {
+            var deleteParams = new DeletionParams($"{Root}/{publicId}")
+            {
+                ResourceType = ResourceType.Image,
+            };
+            var result = await _cloudinary.DestroyAsync(deleteParams);
+            if (result.StatusCode == HttpStatusCode.OK) return true;
+            return false;
+        }
+        public async Task<bool> DeleteFolderImage(string folderName)
+        {
+            var result = await _cloudinary.DeleteFolderAsync($"{Root}/{folderName}");
+            Console.WriteLine(result.StatusCode.ToString());
+            if (result.StatusCode != HttpStatusCode.OK)
+                return false;
+            return true;
+        }
         public async Task<string?> UploadImage(IFormFile file, string publicId, string folderName)
         {
             if (file != null && file.Length > 0)
@@ -34,25 +55,22 @@ namespace FN.Application.Helper.Images
             }
             return null;
         }
-        public string GenerateId() => Guid.NewGuid().ToString().Substring(4, 4);
-
-        public async Task<bool> DeleteImage(string publicId)
+        public async Task<List<string>> UploadImages(List<IFormFile> files, string folderName)
         {
-            var deleteParams = new DeletionParams($"{Root}/{publicId}")
+            var uploadResults = new List<string>();
+            foreach (var image in files)
             {
-                ResourceType = ResourceType.Image,
-            };
-            var result = await _cloudinary.DestroyAsync(deleteParams);
-            if (result.StatusCode == HttpStatusCode.OK) return true;
-            return false;
-        }
-        public async Task<bool> DeleteFolderImage(string folderName)
-        {
-            var result = await _cloudinary.DeleteFolderAsync($"{Root}/{folderName}");
-            Console.WriteLine(result.StatusCode.ToString());
-            if (result.StatusCode != HttpStatusCode.OK)
-                return false;
-            return true;
+                var uploadParam = new ImageUploadParams
+                {
+                    Transformation = new Transformation().Quality(50).Chain(),
+                    File = new FileDescription(image.FileName, image.OpenReadStream()),
+                    Folder = $"{Root}/{folderName}",
+                    Overwrite = true
+                };
+                var uploadResult = await _cloudinary.UploadAsync(uploadParam);
+                uploadResults.Add(uploadResult.SecureUrl.AbsoluteUri);
+            }
+            return uploadResults;
         }
     }
 }

@@ -21,6 +21,14 @@ namespace FN.Application.Catalog.Product.Pattern
         {
             await _dbRedis.RemoveValue(SystemConstant.CACHE_PRODUCT);
         }
+        protected DateTime Now()
+        {
+            DateTime timeNow = new TimeHelper.Builder()
+                .SetTimestamp(DateTime.UtcNow)
+                .SetTimeZone("SE Asia Standard Time")
+                .SetRemoveTick(true).Build();
+            return timeNow;
+        }
         protected string Folder(string code)
         {
             return $"{ROOT}/{code}";

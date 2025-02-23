@@ -68,6 +68,13 @@ namespace FN.Application.Systems.User
             var userVm = _mapper.Map<UserViewModel>(user);
             return new ApiSuccessResult<UserViewModel>(userVm);
         }
+        public async Task<ApiResult<UserViewModel>> GetByUsername(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null) return new ApiErrorResult<UserViewModel>("Tài khoản không tồn tại");
+            var userVm = _mapper.Map<UserViewModel>(user);
+            return new ApiSuccessResult<UserViewModel>(userVm);
+        }
         public async Task<ApiResult<string>> RequestUpdateMail(int userId, string newEmail)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());

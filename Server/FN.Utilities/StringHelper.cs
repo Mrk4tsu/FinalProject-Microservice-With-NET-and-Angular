@@ -47,6 +47,7 @@ namespace FN.Utilities
 
         public static string GenerateProductCode(string input)
         {
+            if (string.IsNullOrEmpty(input)) return input;
             string codePrefix = GeneratePrefix(input);
             string codeNumbers = ExtractNumbers(input);
             string randomSuffix = Guid.NewGuid().ToString().Substring(0, 6);
@@ -66,6 +67,7 @@ namespace FN.Utilities
         }
         static string GeneratePrefix(string input)
         {
+            if (string.IsNullOrEmpty(input)) return input;
             string normalized = RemoveDiacritics(input);
             string[] words = normalized.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             StringBuilder prefix = new StringBuilder();
@@ -84,6 +86,7 @@ namespace FN.Utilities
 
         static string RemoveDiacritics(string text)
         {
+            if (string.IsNullOrEmpty(text)) return text;
             var normalizedString = text.Normalize(NormalizationForm.FormD);
             var stringBuilder = new StringBuilder();
 

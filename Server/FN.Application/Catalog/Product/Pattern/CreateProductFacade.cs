@@ -6,6 +6,7 @@ using FN.DataAccess.Enums;
 using FN.Utilities;
 using FN.ViewModel.Catalog.Products;
 using FN.ViewModel.Helper.API;
+using Ganss.Xss;
 
 namespace FN.Application.Catalog.Product.Pattern
 {
@@ -38,22 +39,19 @@ namespace FN.Application.Catalog.Product.Pattern
         {
             var code = StringHelper.GenerateProductCode(request.Title);
             var folder = Folder(code);
-            DateTime timeNow = new TimeHelper.Builder()
-                .SetTimestamp(DateTime.UtcNow)
-                .SetTimeZone("SE Asia Standard Time")
-                .SetRemoveTick(true).Build();
+            
             var thumbnail = await _image.UploadImage(request.Thumbnail, code, folder);
             var newItem = new Item()
             {
                 Title = request.Title,
                 Description = request.Description,
                 Keywords = request.Keywords,
-                SeoTitle = request.SeoTitle,
+                SeoTitle = request.Title,
                 UserId = userId,
-                CreatedDate = timeNow,
-                ModifiedDate = timeNow,
+                CreatedDate = Now(),
+                ModifiedDate = Now(),
                 NormalizedTitle = StringHelper.NormalizeString(request.Title),
-                SeoAlias = StringHelper.GenerateSeoAlias(request.SeoTitle),
+                SeoAlias = StringHelper.GenerateSeoAlias(request.Title),
                 Code = code,
                 Thumbnail = thumbnail ?? "",
             };
@@ -65,14 +63,16 @@ namespace FN.Application.Catalog.Product.Pattern
         }
         private async Task<ProductDetail> CreateProductDetail(CreateProductDetailRequest request, int itemId)
         {
+            var sanitizer = new HtmlSanitizer();
+            sanitizer.AllowedAttributes.Add("class");
+            sanitizer.AllowedTags.Add("code");
             var productDetail = new ProductDetail()
             {
-                Detail = request.Detail,
+                Detail = sanitizer.Sanitize(request.Detail),
                 Version = request.Version,
                 Note = request.Note,
                 ItemId = itemId,
                 CategoryId = request.CategoryId,
-                Status = request.Status
             };
             await _db.ProductDetails.AddAsync(productDetail);
             await _db.SaveChangesAsync();

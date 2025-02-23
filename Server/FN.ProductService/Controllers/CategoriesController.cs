@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FN.ProductService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/category")]
     [ApiController, AllowAnonymous]
     public class CategoriesController : ControllerBase
     {

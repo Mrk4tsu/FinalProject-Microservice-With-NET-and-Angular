@@ -15,7 +15,7 @@ var app = builder.Build();
 
 app.ConfigureCORS(builder.Configuration);
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
