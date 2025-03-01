@@ -47,7 +47,6 @@ namespace FN.Extensions
         public static IApplicationBuilder ConfigureSwaggerExplorer(this IApplicationBuilder app)
         {
             var ev = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
-            Console.WriteLine(ev.EnvironmentName);
             if (ev.IsDevelopment())
             {
                 app.UseSwagger();

@@ -1,0 +1,6 @@
+@FN.AIService_HostAddress = http://localhost:5264
+
+GET {{FN.AIService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
