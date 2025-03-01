@@ -165,5 +165,11 @@ namespace FN.Application.Systems.User
             if (result.Succeeded) return new ApiSuccessResult<bool>();
             return new ApiErrorResult<bool>("Thay đổi tên không thành công");
         }
+
+        public async Task<ApiResult<List<string>>> GetListUsername()
+        {
+            var users = await _userManager.Users.Select(u => u.UserName).ToListAsync();
+            return new ApiSuccessResult<List<string>>(users);
+        }
     }
 }

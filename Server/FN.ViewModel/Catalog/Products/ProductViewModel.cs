@@ -1,4 +1,6 @@
-﻿namespace FN.ViewModel.Catalog.Products
+﻿using System.Text.Json.Serialization;
+
+namespace FN.ViewModel.Catalog.Products
 {
     public class ProductViewModel
     {
@@ -17,19 +19,23 @@
         public DateTime TimeCreates { get; set; }
         public DateTime TimeUpdates { get; set; }
     }
-    //public class ProductViewModel
-    //{
-    //    public int Id { get; set; }
-    //    public string Name { get; set; } = string.Empty;
-    //    public string NormalizedName { get; set; } = string.Empty;
-    //    public string CategoryName { get; set; } = string.Empty;
-    //    public decimal Price { get; set; }
-    //    public decimal OriginalPrice { get; set; }
-    //    public string Author { get; set; } = string.Empty;
-    //    public DateTime UploadTime { get; set; }
-    //    public DateTime LastUpdateTime { get; set; }
-    //    public string Version { get; set; } = string.Empty;
-    //    public string SeoAlias { get; set; } = string.Empty;
-    //    public string Thumbnail { get; set; } = string.Empty;
-    //}
+    public class ProductDetailViewModel : ProductViewModel
+    {
+        public string Detail { get; set; }
+        public string Note { get; set; }
+        public int ViewCount { get; set; }
+        public int LikeCount { get; set; }
+        public int DisLikeCount { get; set; }
+        public string Description { get; set; }
+        public string CategoryName { get; set; }
+        [JsonIgnore]
+        public string? ImagesJson { get; set; }
+        public List<ImageProductViewModel> Images { get; set; }
+    }
+    public class ImageProductViewModel
+    {
+        public int Id { get; set; }
+        public string ImageUrl { get; set; }
+        public string Caption { get; set; }
+    }
 }

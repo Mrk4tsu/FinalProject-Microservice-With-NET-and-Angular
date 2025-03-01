@@ -20,5 +20,11 @@ namespace FN.ProductService.Controllers
             var products = await _service.GetProducts(request);
             return Ok(products);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct(int id)
+        {
+            var product = await _service.GetProduct(id);
+            return Ok(product);
+        }
     }
 }

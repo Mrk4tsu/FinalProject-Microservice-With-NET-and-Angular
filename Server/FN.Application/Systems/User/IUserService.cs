@@ -8,6 +8,7 @@ namespace FN.Application.Systems.User
     {
         Task<ApiResult<UserViewModel>> GetById(int id);
         Task<ApiResult<UserViewModel>> GetByUsername(string username);
+        Task<ApiResult<List<string>>> GetListUsername();
         Task<ApiResult<bool>> UpdateAvatar(int userId, IFormFile file);
         Task<ApiResult<bool>> ConfirmEmailChange(UpdateEmailResponse response);
         Task<ApiResult<string>> RequestUpdateMail(int userId, string newEmail);

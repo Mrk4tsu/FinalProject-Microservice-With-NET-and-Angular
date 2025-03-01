@@ -34,23 +34,25 @@ namespace FN.Application.Catalog.Product
             var facade = new CreateProductFacade(_db, _dbRedis, _image);
             return await facade.Create(request, userId);
         }
-
+        public async Task<ApiResult<bool>> Update(ItemUpdateRequest request, int itemId, int userId)
+        {
+            var facade = new UpdateProductFacade(_db, _dbRedis, _image);
+            return await facade.Update(request, itemId, userId);
+        }
         public async Task<ApiResult<PagedResult<ProductViewModel>>> GetProducts(ProductPagingRequest request, int userId)
         {
             var facade = new GetProductFacade(_db, _dbRedis, _image);
             return await facade.GetProducts(request, true, false, userId);
         }
-
         public async Task<ApiResult<PagedResult<ProductViewModel>>> TrashProducts(ProductPagingRequest request, int userId)
         {
             var facade = new GetProductFacade(_db, _dbRedis, _image);
             return await facade.GetProducts(request, true, true, userId);
         }
 
-        public async Task<ApiResult<bool>> Update(ItemUpdateRequest request, int itemId, int userId)
+        public Task<ApiResult<bool>> UpdatePrice(int productId, decimal newPrice)
         {
-            var facade = new UpdateProductFacade(_db, _dbRedis, _image);
-            return await facade.Update(request, itemId, userId);
+            throw new NotImplementedException();
         }
     }
 }
