@@ -1,6 +1,5 @@
 ﻿using GeminiAIDev.Client;
 using GeminiAIDev.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FN.AIService.Controllers
