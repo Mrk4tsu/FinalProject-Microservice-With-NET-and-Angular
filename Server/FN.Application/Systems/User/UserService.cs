@@ -39,31 +39,16 @@ namespace FN.Application.Systems.User
             _imageService = imageService;
             _authService = authService;
         }
-
-        public async Task<ApiResult<TokenResponse>> RefreshToken(RefreshTokenRequest request)
-        {
-            var currentToken = await _tokenService.GetRefreshToken(request);
-            if (currentToken == null || currentToken != request.RefreshToken)
-                return new ApiErrorResult<TokenResponse>("Refresh token không hợp lệ");
-            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
-            if (user == null) return new ApiErrorResult<TokenResponse>("Tài khoản không tồn tại");
-
-            var token = await _tokenService.GenerateAccessToken(user);
-            var newRefreshToken = _tokenService.GenerateRefreshToken();
-
-            var response = new TokenResponse
-            {
-                AccessToken = token,
-                RefreshToken = newRefreshToken,
-                RefreshTokenExpiry = DateTime.Now.AddDays(3),
-                ClientId = request.ClientId
-            };
-            await _tokenService.SaveRefreshToken(newRefreshToken, request, response.RefreshTokenExpiry - DateTime.Now);
-            return new ApiSuccessResult<TokenResponse>(response);
-        }
         public async Task<ApiResult<UserViewModel>> GetById(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null) return new ApiErrorResult<UserViewModel>("Tài khoản không tồn tại");
+            var userVm = _mapper.Map<UserViewModel>(user);
+            return new ApiSuccessResult<UserViewModel>(userVm);
+        }
+        public async Task<ApiResult<UserViewModel>> GetByUsername(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
             if (user == null) return new ApiErrorResult<UserViewModel>("Tài khoản không tồn tại");
             var userVm = _mapper.Map<UserViewModel>(user);
             return new ApiSuccessResult<UserViewModel>(userVm);
@@ -104,7 +89,6 @@ namespace FN.Application.Systems.User
             if (result.Succeeded) return new ApiSuccessResult<bool>();
             return new ApiErrorResult<bool>("Cập nhật ảnh đại diện không thành công");
         }
-
         public async Task<ApiResult<string>> RequestForgotPassword(RequestForgot request)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
@@ -119,7 +103,6 @@ namespace FN.Application.Systems.User
             });
             return new ApiSuccessResult<string>(token);
         }
-
         public async Task<ApiResult<bool>> ResetPassword(ForgotPasswordRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
@@ -133,7 +116,6 @@ namespace FN.Application.Systems.User
             }
             return new ApiErrorResult<bool>(result.Errors.First().Description);
         }
-
         public async Task<ApiResult<bool>> ChangePassword(ChangePasswordRequest request)
         {
             var user = await _userManager.FindByIdAsync(request.UserId.ToString());
@@ -148,7 +130,6 @@ namespace FN.Application.Systems.User
             }
             return new ApiErrorResult<bool>(result.Errors.First().Description);
         }
-
         public async Task<ApiResult<bool>> ChangeName(int userId, string newName)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -157,6 +138,11 @@ namespace FN.Application.Systems.User
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded) return new ApiSuccessResult<bool>();
             return new ApiErrorResult<bool>("Thay đổi tên không thành công");
+        }
+        public async Task<ApiResult<List<string>>> GetListUsername()
+        {
+            var users = await _userManager.Users.Select(u => u.UserName).ToListAsync();
+            return new ApiSuccessResult<List<string>>(users);
         }
     }
 }

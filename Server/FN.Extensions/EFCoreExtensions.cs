@@ -1,4 +1,4 @@
-﻿using FN.Application.MapProfile;
+﻿using FN.Application.Base;
 using FN.DataAccess;
 using FN.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +15,7 @@ namespace FN.Extensions
         {
             var connectionString = config.GetConnectionString(SystemConstant.DB_CONNECTION_STRING);
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            });
+            services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
             services.AddSingleton<IDbConnection>(sp => new MySqlConnection(connectionString));
             services.AddAutoMapper(typeof(AutoMapperProfile));

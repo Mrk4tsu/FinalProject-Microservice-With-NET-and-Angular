@@ -33,3 +33,11 @@ The system consists of multiple independent services, including:
 ## 🎯 Setup Instructions
 ### 📌 Prerequisites 
 ### 🛠️ Installation  
+#### Setup Environment && Tools
+1. Setup Environment Net Core 8 SDK
+2. Setup MongoDB (localhost) or MongoDB Atlas (Online)
+3. Setup Redis CLI (localhost) or Resdis Server(Online)
+4. Setup MySQL (localhost) or Online
+5. Docker (Option) deploy
+6. Need a Cloud Server (Google Cloud, ASW, Azure, Cloudinary,...)
+7. Firebase
