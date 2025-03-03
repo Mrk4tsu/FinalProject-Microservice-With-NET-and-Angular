@@ -1,5 +1,5 @@
 ﻿using FN.Application.Systems.Token;
-using FN.ViewModel.Helper.Device;
+using FN.Utilities.Device;
 using FN.ViewModel.Systems.Token;
 using MongoDB.Driver;
 

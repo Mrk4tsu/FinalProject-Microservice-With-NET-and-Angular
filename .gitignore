@@ -404,5 +404,7 @@ Migrations/*.designer.cs
 appsettings.json
 appsettings.*.json
 */appsettings.json
-FN.EmailService/appsettings.json
+*/ocelot.json
+ocelot.*.json
+ocelot.json
 FN.EmailService/appsettings.json

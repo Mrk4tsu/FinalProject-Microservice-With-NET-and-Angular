@@ -1,0 +1,6 @@
+@FN.ProductService_HostAddress = http://localhost:5195
+
+GET {{FN.ProductService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

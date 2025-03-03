@@ -20,9 +20,7 @@ namespace FN.DataAccess.Configurations
             builder.Property(x => x.TimeCreated)
                 .HasDefaultValue(DateTime.Now);
 
-            builder.HasIndex(x => x.UserName)
-                .HasDatabaseName("idx_app_username")
-                .IsUnique();
+            builder.HasIndex(x => x.UserName).HasDatabaseName("idx_appUser_userName").IsUnique();
         }
     }
 }

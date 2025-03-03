@@ -34,6 +34,7 @@ namespace FN.Application.Systems.Token
             var claims = new List<Claim>
             {
                 new Claim("UserId", user.Id.ToString()),
+                new Claim("Username", user.UserName!),
                 new Claim("FullName", user.FullName),
                 new Claim("Avatar", user.Avatar),
                 new Claim("Role", string.Join(';', role))
