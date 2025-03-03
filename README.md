@@ -16,7 +16,7 @@ DEMO: [mrkatsu.io.vn](https://mrkatsu.io.vn)
 - **Caching Mechanism** (Redis)  
 ## 🏗️ Project Architecture  
 The system consists of multiple independent services, including: 
-1. **[API Gateway](https://github.com/Mrk4tsu/FinalProject-Microservice-With-NET-and-Angular/tree/main/FN.APIGateway#danh-s%C3%A1ch-x%E1%BB%AD-l%C3%BD-c%C3%A1c-api-gateway)** – Handles request routing, authentication, and rate limiting.  
+1. **[API Gateway](https://github.com/Mrk4tsu/FinalProject-Microservice-With-NET-and-Angular/tree/master/Server/FN.APIGateway#danh-s%C3%A1ch-x%E1%BB%AD-l%C3%BD-c%C3%A1c-api-gateway)** – Handles request routing, authentication, and rate limiting.  
 2. **User Service** – Manages user registration, authentication, and profiles. 
 3. **Product Service** – Handles product listings, categories, and inventory. 
 4. **Order Service** – Manages orders, transactions, and payments.
