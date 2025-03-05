@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FN.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Blog : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -46,7 +46,7 @@ namespace FN.DataAccess.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Avatar = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false, defaultValue: "https://res.cloudinary.com/dje3seaqj/image/upload/v1736989161/gatapchoi_biglrl.jpg")
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TimeCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 18, 47, 35, 661, DateTimeKind.Local).AddTicks(6954)),
+                    TimeCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 3, 5, 23, 30, 39, 958, DateTimeKind.Local).AddTicks(5274)),
                     UserName = table.Column<string>(type: "varchar(255)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "longtext", nullable: true)
@@ -215,8 +215,8 @@ namespace FN.DataAccess.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SeoTitle = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3083)),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3649)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 3, 5, 23, 30, 39, 959, DateTimeKind.Local).AddTicks(5594)),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 3, 5, 23, 30, 39, 959, DateTimeKind.Local).AddTicks(6088)),
                     IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -226,6 +226,30 @@ namespace FN.DataAccess.Migrations
                         name: "FK_items_app_users_UserId",
                         column: x => x.UserId,
                         principalTable: "app_users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "blogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    Detail = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    LikeCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    DislikeCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_blogs_items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -304,7 +328,7 @@ namespace FN.DataAccess.Migrations
                     ProductDetailId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     PriceType = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 2, 21, 11, 47, 35, 663, DateTimeKind.Utc).AddTicks(7842)),
+                    CreatedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false, defaultValue: new DateTime(2025, 3, 5, 16, 30, 39, 961, DateTimeKind.Utc).AddTicks(478)),
                     StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -330,6 +354,11 @@ namespace FN.DataAccess.Migrations
                 table: "app_users",
                 column: "UserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_blogs_ItemId",
+                table: "blogs",
+                column: "ItemId");
 
             migrationBuilder.CreateIndex(
                 name: "idx_seo_alias",
@@ -374,6 +403,9 @@ namespace FN.DataAccess.Migrations
         {
             migrationBuilder.DropTable(
                 name: "app_roles");
+
+            migrationBuilder.DropTable(
+                name: "blogs");
 
             migrationBuilder.DropTable(
                 name: "product_image");
