@@ -40,5 +40,18 @@ namespace FN.AIService.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpPost("create-game-news")]
+        public async Task<IActionResult> CreateGameNews()
+        {
+            try
+            {
+                var postResponse = await apiClient.CreatePostAsync();
+                return Ok(postResponse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
