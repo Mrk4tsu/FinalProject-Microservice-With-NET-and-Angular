@@ -18,5 +18,6 @@
         public bool IsDeleted { get; set; }
         public AppUser User { get; set; }
         public List<ProductDetail> ProductDetails { get; set; }
+        public List<Blog> Blogs { get; set; }
     }
 }

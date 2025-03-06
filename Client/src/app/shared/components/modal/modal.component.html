@@ -1,0 +1,17 @@
+<div class="modal-content">
+  <div class="modal-header border-0">
+    <h6 class="modal-title d-flex justify-content-start align-items-center" id="staticBackdropLabel">
+      <span class="material-symbols-rounded menu-icon bg-info">priority_high</span>
+      {{ title }}
+    </h6>
+  </div>
+  <div class="modal-body my-0 py-0">
+    {{ message }}
+  </div>
+  <div class="modal-footer border-0 d-flex justify-content-center">
+    @if (showCancel) {
+      <button style="min-width: 80px" class="btn bg-tian-light text-white round-7" (click)="activeModal.dismiss()">Hủy</button>
+    }
+    <button class="btn round-7 {{btnStyle}} border-0" (click)="activeModal.close()">{{ btnText }}</button>
+  </div>
+</div>

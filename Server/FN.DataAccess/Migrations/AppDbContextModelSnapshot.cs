@@ -113,7 +113,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("TimeCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 661, DateTimeKind.Local).AddTicks(6954));
+                        .HasDefaultValue(new DateTime(2025, 3, 5, 23, 30, 39, 958, DateTimeKind.Local).AddTicks(5274));
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
@@ -128,6 +128,38 @@ namespace FN.DataAccess.Migrations
                         .HasDatabaseName("idx_appUser_userName");
 
                     b.ToTable("app_users", (string)null);
+                });
+
+            modelBuilder.Entity("FN.DataAccess.Entities.Blog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DislikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikeCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("blogs", (string)null);
                 });
 
             modelBuilder.Entity("FN.DataAccess.Entities.Category", b =>
@@ -201,7 +233,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3083));
+                        .HasDefaultValue(new DateTime(2025, 3, 5, 23, 30, 39, 959, DateTimeKind.Local).AddTicks(5594));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -221,7 +253,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("ModifiedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 21, 18, 47, 35, 662, DateTimeKind.Local).AddTicks(3649));
+                        .HasDefaultValue(new DateTime(2025, 3, 5, 23, 30, 39, 959, DateTimeKind.Local).AddTicks(6088));
 
                     b.Property<string>("NormalizedTitle")
                         .IsRequired()
@@ -371,7 +403,7 @@ namespace FN.DataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)")
-                        .HasDefaultValue(new DateTime(2025, 2, 21, 11, 47, 35, 663, DateTimeKind.Utc).AddTicks(7842));
+                        .HasDefaultValue(new DateTime(2025, 3, 5, 16, 30, 39, 961, DateTimeKind.Utc).AddTicks(478));
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
@@ -503,6 +535,17 @@ namespace FN.DataAccess.Migrations
                     b.ToTable("user_tokens", (string)null);
                 });
 
+            modelBuilder.Entity("FN.DataAccess.Entities.Blog", b =>
+                {
+                    b.HasOne("FN.DataAccess.Entities.Item", "Item")
+                        .WithMany("Blogs")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
             modelBuilder.Entity("FN.DataAccess.Entities.Item", b =>
                 {
                     b.HasOne("FN.DataAccess.Entities.AppUser", "User")
@@ -567,6 +610,8 @@ namespace FN.DataAccess.Migrations
 
             modelBuilder.Entity("FN.DataAccess.Entities.Item", b =>
                 {
+                    b.Navigation("Blogs");
+
                     b.Navigation("ProductDetails");
                 });
 
