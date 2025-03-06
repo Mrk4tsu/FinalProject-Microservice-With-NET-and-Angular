@@ -65,6 +65,7 @@
   --background-pre: #e0eae3;
   --background-soft: #ffffff;
   --background-layer: url('/assets/public/images/background/bg-light.png');
+  --background-info: url('/assets/public/images/background/bg-info-light.gif');
   --background-item: url("/");
   --text-color: #000000;
   --text-color-secondary: #6c757d;
@@ -77,6 +78,7 @@
   --background-pre: rgb(45, 74, 99);
   --background-layer: url('/assets/public/images/background/bg-layer.png');
   --background-item: url('/assets/public/images/background/bg-item.png');
+  --background-info: url('/assets/public/images/background/bg-info-dark.gif');
   --text-color: #ffffff;
   --text-color-secondary: #cccccc;
   --color-hover: #fffd87;
