@@ -1,0 +1,73 @@
+<main class="signin auth">
+  <div class="left">
+    <a href="#"><img src="/assets/public/images/logo.png" alt="Logo" style="width: 150px;"/></a>
+    <h1>Web tải game, ứng dụng hỗ trợ miễn phí</h1>
+  </div>
+  <div class="right bg-soft-screen shadow d-flex align-items-center position-relative">
+    <a class="d-flex align-items-center position-absolute start-0 title" style="top:15px;" routerLink="/">
+      <i class="fas fa-long-arrow-alt-left mx-lg-5 mx-3"></i>
+      Quay lại trang chủ
+    </a>
+    <section class="container right-content mt-4 login">
+      <a href="/" class="d-flex justify-content-center d-lg-none pb-sm-3">
+        <img src="/assets/public/images/logo.png" alt="Logo" style="width: 150px;"/>
+      </a>
+
+      <h3 class="mb-4 mt-0 mt-sm-3">Đăng nhập</h3>
+      <div class="d-flex justify-content-between align-items-center mx-lg-5 px-lg-5">
+        <a href="javascript:void(0)" (click)="isDevelopment()"
+           class="bg-facebook shadow-hover-secondary text-center text-decoration-none rounded-3 p-1 me-1 container-fluid">
+          <i class="fab fa-facebook-f text-light"></i>
+        </a>
+        <a href="javascript:void(0)" (click)="isDevelopment()"
+           class="text-center shadow-hover-secondary text-decoration-none rounded-3 p-1 ms-1 bg-light container-fluid">
+          <i class="fab fa-google text-danger"></i>
+        </a>
+      </div>
+
+      <form class="mx-lg-5 px-lg-5 mt-3 auths-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="my-4">
+          <label class="form-label" for="usn">Username</label>
+          <input type="text" class="form-control" id="usn" placeholder="Nhập tên đăng nhập"
+                 formControlName="userName">
+          <div class="error-feedback"
+               *ngIf="hasDisplayErrors('userName') && form.controls.userName.hasError('required')">
+            Vui lòng nhập tài khoản
+          </div>
+        </div>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <label for="password" class="form-label">Mật khẩu</label>
+            <a href="#" id="tgPassword" class="text-tian-light pe-2"> Hiển thị </a>
+          </div>
+          <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu"
+                 formControlName="password">
+          <div class="error-feedback"
+               *ngIf="hasDisplayErrors('password') && form.controls.password.hasError('required')">
+            Vui lòng nhập tài khoản
+          </div>
+        </div>
+        <div class="mb-4 form-check">
+          <div class="d-flex justify-content-between">
+            <label class="form-check-label">
+              <input class="form-check-input bg-transparent" type="checkbox" formControlName="rememberMe"> Nhớ tài khoản
+            </label>
+            <a class="fw-light" [routerLink]="['/forgot-password']" style="font-size: 0.9rem;">Quên mật khẩu</a>
+          </div>
+
+        </div>
+
+        <button [disabled]="isLoading" type="submit" class="btn bg-gradient-success text-white col-12">
+          <span *ngIf="!isLoading">Đăng nhập</span>
+          <span *ngIf="isLoading">
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Đợi tí...
+          </span>
+        </button>
+      </form>
+      <span class="text-center d-flex justify-content-center mt-2">
+        Chưa có tài khoản?  <a [routerLink]="['/register']" class="ps-2 text-tian-light text-decoration-none"> Đăng kí ngay </a>
+      </span>
+    </section>
+  </div>
+</main>
