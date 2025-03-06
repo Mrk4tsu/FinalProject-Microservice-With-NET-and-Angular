@@ -129,8 +129,8 @@ namespace FN.Application.Systems.User
             {
                 var cacheKey = $"user:{request.UserName}";
                 var existed = await _redisService.KeyExist(cacheKey);
-
-                if (existed || await _userManager.FindByNameAsync(request.UserName) != null)
+                if(existed) return new ApiErrorResult<bool>("Tài khoản đã tồn tại");
+                if (await _userManager.FindByNameAsync(request.UserName) != null)
                     return new ApiErrorResult<bool>("Tài khoản đã tồn tại");
 
                 var user = new AppUser

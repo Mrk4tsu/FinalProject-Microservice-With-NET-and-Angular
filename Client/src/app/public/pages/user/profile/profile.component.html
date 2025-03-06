@@ -1,0 +1,150 @@
+<div class="mt-5 pt-4 container">
+  <!--  <div *ngIf="isLoading; else userContent">-->
+  <!--    Loading...-->
+  <!--  </div>-->
+  <ng-container *ngIf="user$ | async as user; else skeleton" class="profile-container">
+    <div class="bg-soft-screen round-7 profile">
+      <section class="profile-top">
+        <div id="croppedResultContainer"
+             class="rounded-circle profile-avatar position-relative d-flex justify-content-center">
+          <a [href]="user.avatar" data-fancybox="single" [attr.data-caption]="user.fullName">
+            <img [src]="user.avatar" alt="Thumbnail"/>
+          </a>
+          @if (this.isMe) {
+            <div class="position-absolute" style="bottom: 5px">
+              <label class="custom-file-label" for="fileInput"><i class="fas fa-camera fs-6"></i></label>
+              <input type="file" id="fileInput" accept="image/*"/>
+            </div>
+          }
+        </div>
+
+
+        <div class="profile-info d-block">
+
+          <div class="text-center fs-5">
+            <span class="fw-bold text-tian-light"> {{ user.fullName }}</span>
+            <a *ngIf="user.emailConfirmed" class="text-tian" data-bs-toggle="tooltip"
+               data-bs-placement="top" title="Tài khoản đã xác thực">
+              <i class="fas fa-check-circle ms-2"></i>
+            </a>
+          </div>
+          <div class="d-flex justify-content-center">
+            <h3 class="text-center fs-6 role bg-danger-50 small shadow-danger-lite text-white">Admin</h3>
+          </div>
+          <div class="mt-3">
+            <p class="text-center mb-0 pb-0">Thông tin</p>
+            <div class="profile-social d-flex justify-content-center">
+              <a href="#">
+                <i class="fab fa-facebook"></i>
+              </a>
+
+              <a href="#">
+                <i class="fab fa-youtube"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-reddit"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#">
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
+            <div class="d-flex flex-wrap justify-content-center align-items-center">
+              <p class="profile-bio text-center">
+                Trang web của tôi: mrkatsu.io.vn <br/>
+                Thật buồn khi bạn không thể thấy được điều này <br/>
+              </p>
+
+            </div>
+            <div *ngIf="isMe" class="d-flex gap-3 justify-content-center align-items-center">
+              <i class="fas fa-user-cog text-warning"></i>
+              <a href="#" class="text-center text-decoration-none text-warning">Quản lí tài khoản</a>
+            </div>
+
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <hr class="w-75  bg-tian-light"/>
+          </div>
+
+          <div class="profile-detail row pb-4">
+            <div class="col-12 col-lg-6 d-flex justify-content-center justify-content-lg-end">
+              <div class="profile-item text-center py-3 my-2 round-6 bg-soft-screen shadow">
+                <h3 class="fs-6 text-high">Sản phẩm sở hữu</h3>
+                <p class="mb-0 pb-0 fw-medium fs-5">5</p>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-center justify-content-lg-start">
+              <div class="profile-item text-center py-3 my-2 round-6 bg-soft-screen shadow">
+                <h3 class="fs-6 text-high">Topic hoạt động</h3>
+                <p class="mb-0 pb-0 fw-medium fs-5">5</p>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-center justify-content-lg-end">
+              <div class="profile-item text-center py-3 my-2 round-6 bg-soft-screen shadow">
+                <h3 class="fs-6 text-high">Lần cuối đăng nhập</h3>
+                <p class="mb-0 pb-0 fw-medium fs-5">
+                  23 February 2024, 21:39
+                </p>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 d-flex justify-content-center justify-content-lg-start">
+              <div class="profile-item text-center py-3 my-2 round-6 bg-soft-screen shadow">
+                <h3 class="fs-6 text-high">Tham gia vào</h3>
+                <p class="mb-0 pb-0 fw-medium fs-5">23 February 2024, 21:39</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+  <ng-template #skeleton>
+    <!-- Skeleton Loading -->
+    <div class="bg-soft-screen round-7 profile">
+      <section class="profile-top">
+        <!-- Avatar -->
+        <div class="rounded-circle skeleton-box shimmer"
+             style="width: 150px; height: 150px; margin: 0 auto;"></div>
+
+        <!-- Thông tin -->
+        <div class="profile-info d-block mt-3">
+          <!-- Tên -->
+          <div class="skeleton-line shimmer mx-auto" style="width: 200px; height: 28px;"></div>
+          <!-- Vai trò -->
+          <div class="skeleton-line shimmer mx-auto mt-2" style="width: 100px; height: 20px;"></div>
+
+          <!-- Social -->
+          <div class="d-flex gap-2 justify-content-center mt-3">
+            <div class="skeleton-circle shimmer" *ngFor="let item of [1,2,3,4,5,6]"
+                 style="width: 32px; height: 32px;"></div>
+          </div>
+
+          <!-- Bio -->
+          <div class="mt-3">
+            <div class="skeleton-line shimmer mx-auto" style="width: 80%; height: 16px;"></div>
+            <div class="skeleton-line shimmer mx-auto mt-2" style="width: 60%; height: 16px;"></div>
+          </div>
+
+          <!-- Quản lý tài khoản -->
+          <div class="d-flex gap-3 justify-content-center mt-3">
+            <div class="skeleton-circle shimmer" style="width: 24px; height: 24px;"></div>
+            <div class="skeleton-line shimmer" style="width: 150px; height: 20px;"></div>
+          </div>
+
+          <!-- Stats -->
+          <div class="profile-detail row pb-4 mt-3">
+            <div class="col-12 col-lg-6 d-flex justify-content-center mb-3" *ngFor="let item of [1,2,3,4]">
+              <div class="skeleton-box shimmer" style="width: 200px; height: 80px; border-radius: 8px;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+</div>

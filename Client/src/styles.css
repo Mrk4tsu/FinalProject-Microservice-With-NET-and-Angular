@@ -1,0 +1,375 @@
+@font-face {
+  font-display: swap;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/assets/fonts/quicksand-300.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/quicksand-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/assets/fonts/quicksand-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/assets/fonts/quicksand-600.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/assets/fonts/quicksand-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/fonts/space-mono-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  font-weight: 100 700;
+  src: url('/assets/fonts/material-symbols-rounded.woff2') format('woff2');
+}
+
+:root {
+  --radius-5: 10px;
+  --radius-6: 15px;
+  --radius-7: 20px;
+
+  --color-tian: #289B7F;
+  --bg-soft: #2A4055;
+
+  --background-color: #EFF7F1;
+  --background-pre: #e0eae3;
+  --background-soft: #ffffff;
+  --background-layer: url('/assets/public/images/background/bg-light.png');
+  --background-info: url('/assets/public/images/background/bg-info-light.gif');
+  --background-item: url("/");
+  --text-color: #000000;
+  --text-color-secondary: #6c757d;
+  --color-hover: #dd4200;
+}
+
+.dark-theme {
+  --background-color: #0F1F2E;
+  --background-soft: #2A4055;
+  --background-pre: rgb(45, 74, 99);
+  --background-layer: url('/assets/public/images/background/bg-layer.png');
+  --background-item: url('/assets/public/images/background/bg-item.png');
+  --background-info: url('/assets/public/images/background/bg-info-dark.gif');
+  --text-color: #ffffff;
+  --text-color-secondary: #cccccc;
+  --color-hover: #fffd87;
+
+  --color-tian: #47e373;
+}
+
+html,
+body {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f4f4f4;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/*==================Background==================*/
+.bg-soft-screen {
+  background: var(--background-soft) !important;
+}
+
+.bg-tian-dark {
+  background: #289B7F !important;
+}
+
+.bg-tian-light {
+  background: var(--color-tian) !important;
+}
+
+.bg-primary-50 {
+  background-color: rgb(184, 125, 255, 0.50);
+}
+
+.bg-success-50 {
+  background-color: rgb(45, 206, 137, 0.50);
+}
+
+.bg-warning-50 {
+  background-color: rgb(255, 194, 0, 0.50);
+}
+
+.bg-info-50 {
+  background-color: rgb(0, 246, 255, 0.50);
+}
+
+.bg-danger-50 {
+  background-color: rgb(255, 0, 0, 0.50);
+}
+
+.bg-success-thin {
+  background-color: rgb(45, 206, 137, 0.10) !important;
+}
+
+.bg-info-thin {
+  background-color: rgb(0, 195, 255, 0.10);
+}
+
+.bg-warning-thin {
+  background-color: rgb(255, 208, 57, 0.10);
+}
+
+.bg-danger-thin {
+  background-color: rgba(255, 73, 73, 0.1);
+}
+
+.bg-primary-thin {
+  background-color: rgb(94, 114, 228, 0.10);
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
+}
+
+.bg-gradient-primary-lite {
+  background: linear-gradient(to bottom, #82bbff 2%, #007aff 99%) !important;
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(to bottom, #b7b7b7 2%, #7b7b7b 99%) !important;
+}
+
+.bg-gradient-danger {
+  background-image: linear-gradient(to bottom, #ff7a7a 2%, #ff0000 99%) !important;
+}
+
+/*.bg-gradient-danger {
+    background: linear-gradient(87deg, #f5365c 0, #f5365c 100%) !important;
+}*/
+.bg-gradient-warning {
+  background-image: linear-gradient(to bottom, #fffa79 2%, #e79e00 99%) !important;
+}
+
+.bg-gradient-warning-lite {
+  background: linear-gradient(87deg, #fb6340 0, #fbb140 100%) !important;
+}
+
+.bg-gradient-success {
+  background: linear-gradient(to bottom, #a6ff79 2%, #3FBC62 99%) !important;
+}
+
+.bg-gradient-info {
+  background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;
+}
+
+.bg-facebook {
+  background: #4267B2 !important;
+}
+
+/*==================End Background==================*/
+
+/*==================Text==================*/
+
+.text-title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  border-left: 5px solid #2dce89;
+  padding-left: 1.3rem;
+}
+
+.text-tian {
+  color: #289B7F !important;
+}
+
+.text-brown {
+  color: #821800ff !important;
+}
+
+.text-tian-light {
+  color: var(--color-tian) !important;
+}
+
+.text-secondary-light {
+  color: var(--text-color-secondary) !important;
+}
+
+/*==================End Text==================*/
+/*==================Shadow==================*/
+
+.shadow-hover-success:hover {
+  box-shadow: 0 0 0 3px rgba(45, 206, 137, 0.25);
+}
+
+.shadow-hover-warning:hover {
+  box-shadow: 0 0 0 3px rgba(251, 99, 64, 0.25);
+}
+
+.shadow-hover-danger:hover {
+  box-shadow: 0 0 0 3px rgba(245, 54, 92, 0.25);
+}
+
+.shadow-hover-primary {
+  box-shadow: 0 0 0 3px rgba(45, 206, 137, 0.25);
+}
+
+.shadow-hover-info {
+  box-shadow: 0 0 0 3px rgba(17, 205, 239, 0.25);
+}
+
+.shadow-hover-secondary {
+  box-shadow: 0 0 0 3px rgba(183, 183, 183, 0.25);
+}
+
+/*==================End Shadow==================*/
+/*==================Menu Rounded Icons==================*/
+.menu-icon, .menu-lg-icon, .menu-sm-icon {
+  display: inline-flex;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50%;
+  color: #fff;
+  margin-right: 4px;
+}
+
+.menu-lg-icon {
+  width: 42px;
+  height: 42px;
+  font-size: 16px;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 30px;
+  font-size: 14px !important;
+}
+
+.menu-sm-icon {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+/*==================End Menu Rounded Icons==================*/
+/*==================Paginate==================*/
+.paginate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paginate a {
+  text-decoration: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  margin: 0 5px;
+}
+
+.paginate .pag-link {
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+  background: linear-gradient(to bottom, #a6ff79 2%, #3FBC62 99%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.paginate .pag-link:hover {
+  box-shadow: 0 0 0 3px #2dce8966 !important;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.paginate .pag-link.active {
+  background: linear-gradient(to bottom, #fffa79 2%, #e79e00 99%) !important;
+  color: #821800ff !important;
+  font-weight: 600;
+}
+
+.paginate .pag-link.active:hover {
+  box-shadow: 0 0 0 3px #fb634066 !important;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.paginate .pag-link-b {
+  background-color: rgb(45, 206, 137, 0.30) !important;
+  color: #fff;
+  width: 4.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.paginate .pag-link-b:hover {
+  background-color: rgb(75, 246, 173, 0.50) !important;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/*==================End Paginate==================*/
+/*==================Material Icons==================*/
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded', monospace;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  font-size: 24px;
+  user-select: none;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 1;
+}
+
+.material-symbols-rounded.bold {
+  font-variation-settings: 'FILL' 1,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+/*==================End Material Icons==================*/
+.round-5 {
+  border-radius: var(--radius-5) !important;
+}
+
+.round-6 {
+  border-radius: var(--radius-6) !important;
+}
+
+.round-7 {
+  border-radius: var(--radius-7) !important;
+}

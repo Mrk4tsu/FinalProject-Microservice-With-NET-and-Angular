@@ -14,7 +14,7 @@ namespace FN.Application.Helper.Images
             _cloudinary = cloudinary;
         }
         
-        public string GenerateId() => Guid.NewGuid().ToString().Substring(4, 4);
+        public string GenerateId() => Guid.NewGuid().ToString().Substring(4, 6);
 
         public async Task<bool> DeleteImage(string publicId)
         {
