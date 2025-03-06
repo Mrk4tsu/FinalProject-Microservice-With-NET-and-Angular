@@ -4,6 +4,7 @@ using FN.DataAccess;
 using FN.DataAccess.Entities;
 using FN.DataAccess.Enums;
 using FN.Utilities;
+using FN.ViewModel.Catalog;
 using FN.ViewModel.Catalog.Products;
 using FN.ViewModel.Helper.API;
 using Ganss.Xss;
@@ -61,7 +62,7 @@ namespace FN.Application.Catalog.Product.Pattern
 
             return newItem;
         }
-        private async Task<ProductDetail> CreateProductDetail(CreateProductDetailRequest request, int itemId)
+        private async Task<ProductDetail> CreateProductDetail(CreateProductRequest request, int itemId)
         {
             var sanitizer = new HtmlSanitizer();
             sanitizer.AllowedAttributes.Add("class");
@@ -78,7 +79,7 @@ namespace FN.Application.Catalog.Product.Pattern
             await _db.SaveChangesAsync();
             return productDetail;
         }
-        private async Task CreatePrice(CreatePriceRequest request, int productDetailId)
+        private async Task CreatePrice(CreatePricesRequest request, int productDetailId)
         {
             var price = new ProductPrice()
             {
@@ -93,7 +94,7 @@ namespace FN.Application.Catalog.Product.Pattern
             await _db.ProductPrices.AddAsync(price);
             await _db.SaveChangesAsync();
         }
-        private async Task CreateImage(CreateImageRequest request, ProductDetail product, Item item)
+        private async Task CreateImage(CreateImagesRequest request, ProductDetail product, Item item)
         {
             if (product.ProductImages == null)
             {
